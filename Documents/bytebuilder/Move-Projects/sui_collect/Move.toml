@@ -1,0 +1,7 @@
+[package]
+name = "sui_collect"
+edition = "2024.beta"
+version = "0.0.1"
+
+[addresses]
+sui_collect = "0x0"
