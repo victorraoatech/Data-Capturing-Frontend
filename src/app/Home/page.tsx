@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import boy_standing from "@/../public/boy_standing.png";
+import Navbar from "../components/navbar";
 
 
 const testimonials = [
@@ -37,8 +38,9 @@ const testimonials = [
 const HomePage = () => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-100">
+              <Navbar />
             {/* Header */}
-            <header className="bg-blue-700">
+            {/* <header className="bg-blue-700">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <div className="w-7 h-7 flex items-center justify-center rounded-full bg-red-600 text-white font-bold">
@@ -46,17 +48,9 @@ const HomePage = () => {
                         </div>
                         <span className="text-xl font-bold text-white">DataCapture</span>
                     </div>
-                    <nav className="flex items-center space-x-6 text-white">
-                        <Link href="#features">Features</Link>
-                        <Link
-                            href="#"
-                            className="bg-red-600 px-4 py-2 rounded-md font-semibold hover:bg-red-700"
-                        >
-                            Get Started
-                        </Link>
-                    </nav>
+                  
                 </div>
-            </header>
+            </header> */}
 
             {/* Hero */}
             <main className="flex-grow">
@@ -217,3 +211,5 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
