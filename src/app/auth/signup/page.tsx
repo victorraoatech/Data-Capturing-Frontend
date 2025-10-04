@@ -49,7 +49,7 @@ export default function Signup(): JSX.Element {
             <div className="p-2 rounded-full bg-gray-100"><PersonIcon /></div>
             <div>
               <div className="font-medium">Individual</div>
-              {/* <div className="text-sm text-gray-500">Sign up as a person</div> */}
+             
             </div>
           </label>
 
