@@ -4,7 +4,7 @@ import { useAuthContext } from "@/AuthContext";
 import axios from "axios";
 
 export const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API;
-// export const apiUrl = "http://localhost:4001";
+
 
 const BASE_URL = apiUrl;
 

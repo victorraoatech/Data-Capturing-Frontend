@@ -9,8 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import boy_standing from "@/../public/boy_standing.png";
 import Navbar from "../components/navbar";
-
-
+import { UserSidebar } from "../components/sidebar";
 const testimonials = [
     {
         name: "Alex Chen",
@@ -53,6 +52,10 @@ const HomePage = () => {
             </header> */}
 
             {/* Hero */}
+            <UserSidebar onShow={false} setShow={function (value: React.SetStateAction<boolean>): void {
+                throw new Error("Function not implemented.");
+            } }/>
+            
             <main className="flex-grow">
                 <section className="bg-gray-200 py-20 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
