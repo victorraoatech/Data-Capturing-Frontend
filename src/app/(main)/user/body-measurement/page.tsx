@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useAuth } from "@/api/hooks/useAuth";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Search, Trash, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -113,7 +113,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export default function MeasurementPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { client } = useAuth();
+  // const { client } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sectionModalOpen, setSectionModalOpen] = useState(false);

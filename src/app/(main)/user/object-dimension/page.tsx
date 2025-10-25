@@ -1,7 +1,6 @@
-// app/(main)/user/object-dimensions/page.tsx
+
 "use client";
 
-import { useAuth } from "@/api/hooks/useAuth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Search, Trash, Users, Plus, Ruler } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,7 @@ import { ObjectDimension } from "../../../../../types";
 export default function ObjectDimensionsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { client } = useAuth();
+  
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 

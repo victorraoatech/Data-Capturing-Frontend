@@ -64,7 +64,7 @@ interface EditObjectDimensionFormProps {
 
 export default function EditObjectDimensionForm({ editId }: EditObjectDimensionFormProps) {
   const router = useRouter();
-  const { client } = useAuth();
+  // const { client } = useAuth();
   const queryClient = useQueryClient();
   const [isClient, setIsClient] = useState(false);
 
@@ -178,7 +178,7 @@ export default function EditObjectDimensionForm({ editId }: EditObjectDimensionF
             updateObjectDimensionMutation.mutate(values);
           }}
         >
-          {({ values, errors, touched }) => (
+          {({ errors, touched }) => (
             <Form className="space-y-6">
               {/* Basic Information Section */}
               <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">

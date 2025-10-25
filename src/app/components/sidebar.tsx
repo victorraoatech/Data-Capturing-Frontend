@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useState, Dispatch, SetStateAction, ReactNode } from 'react';
-import Image from 'next/image';
 import { 
   Home, 
   Calendar, 
