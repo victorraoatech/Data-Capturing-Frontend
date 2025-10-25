@@ -4,14 +4,11 @@
 "use client";
 
 import React, { JSX } from "react";
-import { Avatar } from "@radix-ui/react-avatar";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/api/hooks/useAuth";
-import { Toast } from "@/app/components/ui/toast";
 import { toast } from "@/app/components/hooks/use-toast";
 
 interface FormValues {

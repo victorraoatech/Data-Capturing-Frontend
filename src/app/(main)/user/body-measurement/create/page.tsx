@@ -8,8 +8,6 @@ import {
   FieldArray,
   Form,
   Formik,
-  type FormikErrors,
-  type FormikTouched,
 } from "formik";
 import type React from "react";
 import { useState } from "react";
@@ -21,8 +19,6 @@ import {
   Trash2,
   Upload,
   ArrowLeft,
-  Eye,
-  Edit,
 } from "lucide-react";
 import { toast } from "@/app/components/hooks/use-toast";
 
