@@ -23,17 +23,23 @@ const Audience = () => {
             Whether you design, build, or create, we help you measure smarter.
           </p>
           
-          <div className="relative bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 shadow-lg">
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 auto-rows-auto font-manrope ">
+          <div className="relative  rounded-3xl p-8 shadow-lg">
+            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 auto-rows-auto font-manrope">
               {targetAudience.map((person) => (
                 <div 
                   key={person.id}
-                  className={`${person.tall ? 'row-span-2' : 'row-span-1'} rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 relative group`}
+                  className={`
+                    ${person.tall ? 'row-span-2' : 'row-span-1'} 
+                    rounded-2xl overflow-hidden shadow-md 
+                    transition-all duration-500 ease-out
+                    relative group
+                    hover:scale-105 hover:shadow-2xl hover:z-10
+                  `}
                 >
                   <img 
                     src={person.image} 
                     alt={person.alt}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                     <p className="text-white font-medium text-sm">{person.title}</p>
@@ -41,8 +47,6 @@ const Audience = () => {
                 </div>
               ))}
             </div>
-            
-           
           </div>
         </section>
       </div>
