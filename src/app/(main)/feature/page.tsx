@@ -1,9 +1,24 @@
-import { memo } from 'react';
 
+
+
+import { memo } from "react";
+import Navbar from "@/app/components/navbar";
+import Footer from "@/app/Home/footer/page";
+import HeroBanner from "./herobanner/page";
+import Measurement from "./measure/page";
+import KeyFeatures from "./key-features/page";
+import ReadyToCapture from "@/app/Home/capture/page";
 const Page = () => {
   return (
     <div>
-      <h2>Page</h2>
+     
+      <Navbar />
+      <HeroBanner />
+      <Measurement/>
+      <KeyFeatures/>
+      
+      <ReadyToCapture/>
+      <Footer />
     </div>
   );
 };
