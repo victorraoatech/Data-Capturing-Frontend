@@ -11,7 +11,7 @@ export interface User {
   phone: string | null;
   organizationId: string;
   role: string;
-  [key: string]: unknown; 
+  // [key: string]: any;
 }
 
 export interface AuthContextType {
@@ -33,36 +33,55 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signIn = (newToken: string, userData: User) => {
     setToken(newToken);
-
     setUser(userData);
 
-    // Store token and user data in localStorage for persistence
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("user", JSON.stringify(userData));
+    try {
+      localStorage.setItem("token", String(newToken));
+      localStorage.setItem("user", JSON.stringify(userData));
+    } catch (err) {
+      // localStorage could be disabled in some environments — fail silently.
+      console.error("Failed to persist auth to localStorage", err);
+    }
   };
 
   const signOut = () => {
     setToken(null);
     setUser(null);
 
-    // Remove token and user data from localStorage
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    } catch (err) {
+      console.error("Failed to remove auth from localStorage", err);
+    }
+
     router.push(`/auth/login`);
-    // router.replace("/signin");
   };
 
   // Restore token and user data from localStorage on initial load
   React.useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+    try {
+      const storedToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
 
-    if (storedToken) {
-      setToken(storedToken);
-    }
+      // Guard against the string "undefined" or "null"
+      if (storedToken && storedToken !== "undefined" && storedToken !== "null") {
+        setToken(storedToken);
+      }
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
+        try {
+          const parsed = JSON.parse(storedUser);
+          // optional: validate shape before setUser(parsed)
+          setUser(parsed);
+        } catch (parseErr) {
+          console.warn("Could not parse stored user, clearing invalid value.", parseErr);
+          // clear corrupt value so we don't try to parse it again
+          localStorage.removeItem("user");
+        }
+      }
+    } catch (err) {
+      console.error("Error reading auth from localStorage", err);
     }
   }, []);
 

@@ -36,7 +36,7 @@
     ".next/types/app/(main)/admin/assesments/edit-assessment/page.tsx",
     "src/app/(main)/admin/assesments/test",
     "src/app/(main)/user/manual-based"
-  ],
+, "src/app/(main)/user/body-measurement"  ],
   "exclude": [
     "node_modules"
   ]

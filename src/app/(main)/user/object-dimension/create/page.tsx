@@ -1,4 +1,4 @@
-// app/(main)/user/object-dimensions/create/CreateObjectDimensionForm.tsx
+
 "use client";
 
 import { useAuth } from "@/api/hooks/useAuth";
@@ -62,7 +62,7 @@ const initialValues: ObjectDimensionFormValues = {
 
 export default function CreateObjectDimensionForm() {
   const router = useRouter();
-  const { client } = useAuth();
+  // const { client } = useAuth();
   const queryClient = useQueryClient();
 
   const createObjectDimensionMutation = useMutation({
@@ -119,7 +119,7 @@ export default function CreateObjectDimensionForm() {
             createObjectDimensionMutation.mutate(values);
           }}
         >
-          {({ values, errors, touched }) => (
+          {({ errors, touched }) => (
             <Form className="space-y-6">
               {/* Basic Information Section */}
               <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">

@@ -87,7 +87,7 @@ const navFooterItems: NavItem[] = [
 
 const AppSidebar = () => {
   const navItems = adminNavItems;
-  const { state, open } = useSidebar();
+  const { open } = useSidebar();
 
   return (
     <Sidebar collapsible="icon">
