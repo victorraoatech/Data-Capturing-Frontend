@@ -40,12 +40,12 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Login Form */}
+         
           <div className="px-6 md:px-[50px] pt-8 w-full flex-1">
             <LoginForm />
           </div>
 
-          {/* Sign up link */}
+         
           <div className="px-6 pb-8 md:pb-0 md:absolute md:top-[702px] md:left-1/2 md:transform md:-translate-x-1/2 w-full md:w-[257px] h-[25px]">
             <p className="font-manrope text-[16px] md:text-[18px] font-light leading-[100%] text-gray-500 text-center">
               Don&apos;t have an account?{" "}
