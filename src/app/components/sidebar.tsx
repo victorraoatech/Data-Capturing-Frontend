@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-// Type definitions
+
 interface SidebarProps {
   onShow: boolean;
   setShow: Dispatch<SetStateAction<boolean>>;
