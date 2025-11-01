@@ -27,7 +27,7 @@ export function ValueSection() {
   return (
     <div className="w-full py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
+       
         <div className="flex flex-col items-center justify-center gap-4 mb-12 lg:mb-16 max-w-2xl mx-auto text-center">
           <h2
             className="text-3xl lg:text-4xl font-normal"
@@ -85,7 +85,7 @@ export function ValueSection() {
                     {goal.title}
                   </h3>
 
-                  {/* Description */}
+                 
                   <p
                     className="text-gray-600 text-base lg:text-lg leading-relaxed"
                     style={{
