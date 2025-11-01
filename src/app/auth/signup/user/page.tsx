@@ -65,7 +65,7 @@ export default function UserPage(): JSX.Element {
         role: "CUSTOMER", 
       };
 
-      const { data } = await client.post("/api/users/signup", payload);
+      const { data } = await client.post("/api/auth/register", payload);
       return data;
     },
     onSuccess: () => {

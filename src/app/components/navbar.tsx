@@ -1,6 +1,4 @@
 
-
-
 "use client";
 
 import Link from "next/link";
@@ -17,7 +15,7 @@ export default function Navbar() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const toggleSignUpDropdown = () => setIsSignUpDropdownOpen((prev) => !prev);
    
-  // const isAbout = pathname === "/about"
+  const isAbout = pathname === "/about";
   const shouldShowLinks = !pathname?.startsWith("/auth");
 
   const signUpOptions = [
@@ -40,9 +38,12 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navbarBackground = isScrolledPastHero 
-    ? "bg-white shadow-lg" 
-    : "bg-[#F4EFFA]"; 
+  // Updated navbar background logic
+  const navbarBackground = isAbout 
+    ? "bg-[#d0c1df] shadow-lg" 
+    : isScrolledPastHero 
+      ? "bg-white shadow-lg" 
+      : "bg-[#F4EFFA]"; 
 
   return (
     <header className={`${navbarBackground} transition-all duration-300 z-50 sticky top-0`}>
@@ -91,14 +92,14 @@ export default function Navbar() {
 
               <Link 
                 href="/howIt-works" 
-                className="text-[#5D2A8B] hover:text-[#5D2A8B]  text-sm font-medium transitiontext-[#5D2A8B] hover:text-[#5D2A8B] hover:underline hover:decoration-[#5D2A8B] hover:decoration-2 text-sm font-medium transition"
+                className="text-[#5D2A8B] hover:text-[#5D2A8B] hover:underline hover:decoration-[#5D2A8B] hover:decoration-2 text-sm font-medium transition"
               >
                 How it works
               </Link>
 
               <Link 
                 href="/about" 
-                className="text-[#5D2A8B] hover:text-[#5D2A8B]  text-sm font-medium transitiontext-[#5D2A8B] hover:text-[#5D2A8B] hover:underline hover:decoration-[#5D2A8B] hover:decoration-2 text-sm font-medium transition"
+                className="text-[#5D2A8B] hover:text-[#5D2A8B] hover:underline hover:decoration-[#5D2A8B] hover:decoration-2 text-sm font-medium transition"
               >
                 About
               </Link>
@@ -112,7 +113,7 @@ export default function Navbar() {
                   aria-expanded={isSignUpDropdownOpen}
                   className="focus:outline-none transition-all duration-200 inline-flex items-center"
                   style={{
-                     width: "110px",
+                    width: "110px",
                     height: "40px",
                     borderRadius: "20px",
                     background: "transparent",
@@ -203,7 +204,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className={`md:hidden absolute left-0 right-0 ${isScrolledPastHero ? 'bg-white' : 'bg-[#F4EFFA]'} shadow-md z-40`}>
+        <div className={`md:hidden absolute left-0 right-0 ${isAbout ? 'bg-[#d0c1df]' : isScrolledPastHero ? 'bg-white' : 'bg-[#F4EFFA]'} shadow-md z-40`}>
           <nav className="flex flex-col space-y-2 p-4 max-w-7xl mx-auto">
             {shouldShowLinks && (
               <>
@@ -225,7 +226,7 @@ export default function Navbar() {
 
                 <Link
                   href="/about"
-                  className="text-[#5D2A8B] hover:text-[#5D2A8B]  text-sm font-medium transitiontext-[#5D2A8B] hover:text-[#5D2A8B] hover:underline hover:decoration-[#5D2A8B] hover:decoration-2 text-sm font-medium transition"
+                  className="text-[#5D2A8B] hover:text-[#5D2A8B] hover:underline hover:decoration-[#5D2A8B] hover:decoration-2 text-sm font-medium transition"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About
@@ -240,7 +241,7 @@ export default function Navbar() {
                     aria-expanded={isSignUpDropdownOpen}
                     className="flex items-center justify-center focus:outline-none transition-all duration-200"
                     style={{
-                     width: "110px",  
+                      width: "110px",  
                       height: "40px",
                       borderRadius: "20px", 
                       background: "transparent",
