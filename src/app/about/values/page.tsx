@@ -104,3 +104,5 @@ export function ValueSection() {
     </div>
   )
 }
+
+export default ValueSection

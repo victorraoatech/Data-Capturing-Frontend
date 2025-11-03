@@ -327,3 +327,5 @@ function FeatureCard({ icon, title, description, index }: FeatureCard & { index:
     </div>
   )
 }
+
+export default AIFeaturesSection

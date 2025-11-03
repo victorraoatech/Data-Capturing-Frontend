@@ -131,7 +131,7 @@ export default function AboutPage() {
                 letterSpacing: "0%",
               }}
             >
-              We're building intelligent tools that make precision accessible to everyone — from designers and engineers
+              We`&apos;`re building intelligent tools that make precision accessible to everyone — from designers and engineers
               to everyday users through smart, image-based measurement technology
             </p>
           </div>

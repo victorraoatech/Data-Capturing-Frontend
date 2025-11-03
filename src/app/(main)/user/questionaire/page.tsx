@@ -12,7 +12,7 @@ import { Questionnaire } from "../../../../../types";
 export default function QuestionnairesPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { client } = useAuth();
+ 
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
