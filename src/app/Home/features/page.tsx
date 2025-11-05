@@ -1,69 +1,129 @@
-// import { memo } from 'react';
-// import Image from 'next/image';
+
+
+
+
+// import { memo } from "react";
+// import Image from "next/image";
 
 // const Features = () => {
 //   const features = [
 //     {
 //       title: "Multi-object measurement",
 //       description: "Measure people or objects from a single image upload.",
-//       icon: "/Ruler Streamline Tabler Line.png"
+//       icon: "/Ruler Streamline Tabler Line.png",
 //     },
 //     {
 //       title: "Create questionnaire for clients",
 //       description: "Collect data from clients",
-//       icon: "/Vector.png"
+//       icon: "/Vector.png",
 //     },
 //     {
 //       title: "Privacy-first system",
 //       description: "Your data stays yours",
-//       icon: "/Vector (1).png"
+//       icon: "/Vector (1).png",
 //     },
 //     {
 //       title: "Cross-platform support",
-//       description: "Simple, fast, and intuitive. No setup needed on any device.",
-//       icon: "/Electric Bolt Streamline Rounded Line - Material Pro Free.png"
-//     }
+//       description:
+//         "Simple, fast, and intuitive. No setup needed on any device.",
+//       icon: "/Electric Bolt Streamline Rounded Line - Material Pro Free.png",
+//     },
 //   ];
 
 //   return (
-//     <section className="py-20 bg-white">
-//       <div className="max-w-7xl mx-auto px-6 bg-[#F4EFFA] w-[1225px] h-[1089px] top-[2042px] left-[80px]">
-//         {/* Header Section */}
-//         <div className="text-center mb-16">
-//           <h2 className="text-4xl font-bold text-gray-900 mb-6">
-//             Our features
-//           </h2>
-//           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-//             Our core tools built with intelligent features that make precision effortless.
-//           </p>
-//         </div>
+//     <section className="py-20 bg-white flex flex-col items-center">
+//       {/* Header Section - stays on white background */}
+//       <div className="text-center mb-12">
+//         <h2
+//           className="text-gray-900 mb-6"
+//           style={{
+//             fontFamily: "Monument Extended, sans-serif",
+//             fontWeight: 400,
+//             fontStyle: "normal",
+//             fontSize: "36px",
+//             lineHeight: "100%",
+//             letterSpacing: "0%",
+//             textAlign: "center",
+//           }}
+//         >
+//           our features
+//         </h2>
+//         <p
+//           className="mt-6 text-gray-600"
+//           style={{
+//             fontFamily: "Manrope, sans-serif",
+//             fontWeight: 400,
+//             fontStyle: "normal",
+//             fontSize: "20px",
+//             lineHeight: "100%",
+//             letterSpacing: "0%",
+//             textAlign: "center",
+//             maxWidth: "700px",
+//             margin: "0 auto",
+//             marginTop: "24px",
+//           }}
+//         >
+//           Our core tools built with intelligent features that make <br/> precision
+//           effortless.
+//         </p>
+//       </div>
 
-//         {/* Features Grid Container */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-//           {features.map((feature, index) => (
+//       {/* Inner colored background container */}
+//       <div
+//         className="bg-[#F4EFFA] rounded-[20px] flex justify-center items-center"
+//         style={{
+//           width: "1255px",
+//           height: "876px",
+//         }}
+//       >
+//         {/* Cards Layout */}
+//         <div
+//           className="grid grid-cols-1 md:grid-cols-2 gap-x-[80px] gap-y-[38px]"
+//           style={{
+//             width: "980px",
+//             height: "688px",
+//           }}
+//         >
+//           {features.map((feature, idx) => (
 //             <div
-//               key={index}
-//               className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100 text-center"
+//               key={idx}
+//               className="bg-white rounded-[20px] shadow-md hover:shadow-lg transform transition-all duration-300 flex flex-col items-center text-center p-8"
+//               style={{
+//                 width: "450px",
+//                 height: "325px",
+//               }}
 //             >
-//               {/* Icon Container */}
-//               <div className="w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-//                 <div className="w-8 h-8 relative">
+//               {/* Icon */}
+//               <div
+//                 className="flex items-center justify-center mb-6"
+//                 style={{
+//                   width: "120px",
+//                   height: "120px",
+//                 }}
+//               >
+//                 <div
+//                   style={{
+//                     width: "90px",
+//                     height: "90px",
+//                     position: "relative",
+//                   }}
+//                 >
 //                   <Image
 //                     src={feature.icon}
 //                     alt={feature.title}
-//                     width={60}
-//                     height={60}
-//                     className="object-contain"
+//                     fill
+//                     style={{ objectFit: "contain" }}
+//                     sizes="90px"
 //                   />
 //                 </div>
 //               </div>
 
-//               {/* Content Container */}
-//               <div>
-//                 <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#5D2A8B] transition-colors duration-300">
+//               {/* Text */}
+//               <div className="px-2">
+//                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
 //                   {feature.title}
 //                 </h3>
-//                 <p className="text-gray-600 leading-relaxed">
+//                 <p className="text-sm text-gray-500 leading-relaxed">
 //                   {feature.description}
 //                 </p>
 //               </div>
@@ -76,7 +136,6 @@
 // };
 
 // export default memo(Features);
-
 
 
 import { memo } from "react";
@@ -108,80 +167,74 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-20 bg-white flex flex-col items-center">
-      {/* Header Section - stays on white background */}
-      <div className="text-center mb-12">
+    <section className="py-12 lg:py-20 bg-white flex flex-col items-center px-4 sm:px-6">
+      {/* Header Section */}
+      <div className="text-center mb-8 lg:mb-12 max-w-4xl mx-auto">
         <h2
-          className="text-gray-900 mb-6"
+          className="text-gray-900 mb-4 lg:mb-6"
           style={{
             fontFamily: "Monument Extended, sans-serif",
             fontWeight: 400,
             fontStyle: "normal",
-            fontSize: "36px",
-            lineHeight: "100%",
+            fontSize: "clamp(28px, 6vw, 36px)",
+            lineHeight: "1.1",
             letterSpacing: "0%",
-            textAlign: "center",
           }}
         >
           our features
         </h2>
         <p
-          className="mt-6 text-gray-600"
+          className="text-gray-600 mx-auto"
           style={{
             fontFamily: "Manrope, sans-serif",
             fontWeight: 400,
             fontStyle: "normal",
-            fontSize: "20px",
-            lineHeight: "100%",
+            fontSize: "clamp(16px, 4vw, 20px)",
+            lineHeight: "1.4",
             letterSpacing: "0%",
-            textAlign: "center",
             maxWidth: "700px",
-            margin: "0 auto",
-            marginTop: "24px",
           }}
         >
-          Our core tools built with intelligent features that make <br/> precision
-          effortless.
+          Our core tools built with intelligent features that make{" "}
+          <br className="hidden lg:block" />
+          precision effortless.
         </p>
       </div>
 
       {/* Inner colored background container */}
       <div
-        className="bg-[#F4EFFA] rounded-[20px] flex justify-center items-center"
+        className="bg-[#F4EFFA] rounded-[20px] flex justify-center items-center w-full max-w-[1255px]"
         style={{
-          width: "1255px",
-          height: "876px",
+          height: "auto",
+          minHeight: "min(876px, 90vh)",
+          padding: "clamp(20px, 5vw, 40px)",
         }}
       >
         {/* Cards Layout */}
         <div
-          className="grid grid-cols-1 md:grid-cols-2 gap-x-[80px] gap-y-[38px]"
-          style={{
-            width: "980px",
-            height: "688px",
-          }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-x-[80px] gap-y-[38px] w-full max-w-[980px]"
         >
           {features.map((feature, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-[20px] shadow-md hover:shadow-lg transform transition-all duration-300 flex flex-col items-center text-center p-8"
+              className="bg-white rounded-[20px] shadow-md hover:shadow-lg transform transition-all duration-300 flex flex-col items-center text-center p-6 lg:p-8 w-full mx-auto"
               style={{
-                width: "450px",
-                height: "325px",
+                maxWidth: "450px",
+                height: "clamp(280px, 40vw, 325px)",
               }}
             >
               {/* Icon */}
               <div
-                className="flex items-center justify-center mb-6"
+                className="flex items-center justify-center mb-4 lg:mb-6"
                 style={{
-                  width: "120px",
-                  height: "120px",
+                  width: "clamp(80px, 20vw, 120px)",
+                  height: "clamp(80px, 20vw, 120px)",
                 }}
               >
                 <div
                   style={{
-                    width: "90px",
-                    height: "90px",
+                    width: "clamp(60px, 15vw, 90px)",
+                    height: "clamp(60px, 15vw, 90px)",
                     position: "relative",
                   }}
                 >
@@ -190,17 +243,29 @@ const Features = () => {
                     alt={feature.title}
                     fill
                     style={{ objectFit: "contain" }}
-                    sizes="90px"
+                    sizes="(max-width: 768px) 60px, 90px"
                   />
                 </div>
               </div>
 
               {/* Text */}
-              <div className="px-2">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <div className="px-2 flex-1 flex flex-col justify-center">
+                <h3 
+                  className="font-semibold text-gray-900 mb-2 lg:mb-3"
+                  style={{
+                    fontSize: "clamp(16px, 4vw, 18px)",
+                    fontFamily: "Manrope, sans-serif",
+                  }}
+                >
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
+                <p 
+                  className="text-gray-500 leading-relaxed"
+                  style={{
+                    fontSize: "clamp(14px, 3vw, 16px)",
+                    fontFamily: "Manrope, sans-serif",
+                  }}
+                >
                   {feature.description}
                 </p>
               </div>
