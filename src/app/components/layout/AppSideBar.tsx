@@ -74,7 +74,7 @@ const adminNavItems: NavItem[] = [
   { name: "Payments", href: "/", icon: <CreditCard /> },
 ];
 
-const superAdminNavItems: NavItem[] = [...adminNavItems];
+// const superAdminNavItems: NavItem[] = [...adminNavItems];
 
 const navFooterItems: NavItem[] = [
   {
