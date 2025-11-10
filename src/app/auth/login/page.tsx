@@ -1,68 +1,3 @@
-
-
-
-// import LoginForm from "@/app/components/forms/loginForm"
-// import Image from "next/image"
-
-// const LoginPage = () => {
-//   return (
-//     <div className="min-h-screen flex items-center justify-center p-6 bg-white">
-//       <div className="w-full max-w-[1349px] h-auto md:h-[935px] flex flex-col md:flex-row items-stretch overflow-hidden gap-10">
-        
-//         <div className="hidden md:block md:w-[700px] h-full">
-//           <Image
-//             src="/Frame 1.png"
-//             alt="Data Capturing Illustration"
-//             width={700}
-//             height={935}
-//             priority
-//             className="w-full h-full object-cover rounded-l-[40px]"
-//           />
-//         </div>
-
-      
-//         <div className="w-full md:w-[609px] h-auto min-h-screen md:min-h-[800px] bg-[#FBFAFC] rounded-[20px] md:rounded-[40px] relative flex flex-col">
-         
-//           <div className="pt-8 pl-6 md:pt-[50px] md:pl-[50px]">
-//             <Image width={55} height={48} src="/Group 1.png" alt="Company Logo" className="object-contain" />
-//           </div>
-
-        
-//           <div className="px-6 md:px-[50px] pt-8 md:pt-12 w-full">
-//             <div className="w-full h-auto flex flex-col gap-4">
-//               <h1 className="font-[family-name:var(--font-monument)] text-[24px] md:text-[30px] font-normal leading-[100%] text-gray-900">
-//                 Welcome Back
-//               </h1>
-//               <p className="font-manrope text-[16px] md:text-[18px] font-light leading-[120%] md:leading-[100%] text-[#5D2A8B]">
-//                 Login to your account to continue tracking your measurement
-//               </p>
-//             </div>
-//           </div>
-
-         
-//           <div className="px-6 md:px-[50px] pt-8 w-full flex-1">
-//             <LoginForm />
-//           </div>
-
-         
-//           <div className="px-6 pb-8 md:pb-0 md:absolute md:top-[702px] md:left-1/2 md:transform md:-translate-x-1/2 w-full md:w-[257px] h-[25px]">
-//             <p className="font-manrope text-[16px] md:text-[18px] font-light leading-[100%] text-gray-500 text-center">
-//               Don&apos;t have an account?{" "}
-//               <a href="/auth/signup" className="text-[#5D2A8B] font-semibold hover:underline">
-//                 Sign up
-//               </a>
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default LoginPage
-
-
-
 "use client"
 
 import type React from "react"
@@ -72,7 +7,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useMutation } from "@tanstack/react-query"
 import { useAuth } from "@/api/hooks/useAuth"
-
+import { useAuthContext } from "@/AuthContext"
 import Link from "next/link"
 import { toast } from "@/app/components/hooks/use-toast"
 
@@ -83,17 +18,22 @@ interface FormValues {
 
 type ApiError = {
   response?: {
+    status?: number;
+    statusText?: string;
     data?: {
       errors?: Array<{ message: string }>
       message?: string
     }
   }
   message?: string
+  code?: string;
+  name?: string;
 }
 
 export default function LoginPage() {
   const router = useRouter()
   const { client } = useAuth()
+  const { signIn } = useAuthContext()
 
   const [formValues, setFormValues] = useState<FormValues>({
     email: "",
@@ -108,12 +48,27 @@ export default function LoginPage() {
         email: values.email,
         password: values.password,
       }
-      const { data } = await client.post("/api/auth/login	", payload)
+      
+      console.log('🚀 Sending LOGIN request to backend:', payload);
+      
+      const { data } = await client.post("/api/auth/login", payload)
       return data
     },
-    onSuccess: () => {
-      toast({ title: "LOGIN SUCCESSFUL!" })
-      router.replace("/dashboard")
+    onSuccess: (data) => {
+      if (data.token && data.user) {
+        signIn(data.token, data.user);
+        toast({ 
+          title: "LOGIN SUCCESSFUL!",
+          description: "Welcome back!"
+        });
+        router.replace("/user");
+      } else {
+        toast({ 
+          title: "Login Error",
+          description: "Invalid response from server",
+          variant: "destructive"
+        });
+      }
     },
     onError: (error: ApiError) => {
       const message =
@@ -121,7 +76,11 @@ export default function LoginPage() {
         error?.response?.data?.message ||
         error?.message ||
         "Login failed"
-      toast({ title: message })
+      toast({ 
+        title: "Login Failed",
+        description: message,
+        variant: "destructive"
+      });
     },
   })
 
@@ -143,164 +102,400 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
     if (!validate()) return
     submitMutate({ email: formValues.email, password: formValues.password })
   }
 
-  const handleGoogleLogin = () => alert("Google login would be implemented here")
+  const handleGoogleLogin = () => {
+    toast({
+      title: 'Google Login',
+      description: 'This feature will be implemented soon'
+    });
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white p-6 lg:p-11">
+    <div className="min-h-screen bg-white">
       <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
         .monument-extended { font-family: 'Monument Extended', sans-serif; }
         .manrope { font-family: 'Manrope', sans-serif; }
-        .input-with-notch { position: relative; }
-        .input-with-notch input { border: 1px solid #d1d5db; border-radius: 12px; }
-        .input-with-notch input:focus { border-color: #5D2A8B; }
-        .input-with-notch.has-value input { clip-path: polygon(0 8px,12px 8px,12px 0,calc(12px + 70px) 0,calc(12px + 70px) 8px,100% 8px,100% 100%,0 100%); }
-        .input-with-notch.has-value::before { content: ''; position:absolute; left:0; top:0; right:0; bottom:0; border:1px solid #d1d5db; border-radius:12px; pointer-events:none; clip-path: polygon(0 0,12px 0,12px 8px,calc(12px + 70px) 8px,calc(12px + 70px) 0,100% 0,100% 100%,0 100%); }
-        .input-with-notch.focused::before { border-color:#5D2A8B; }
-        .input-with-notch.error input { border-color: #ef4444; }
-        .input-with-notch.error::before { border-color: #ef4444; }
+        
+        .input-container {
+          position: relative;
+          width: 484px;
+          height: 60px;
+          border: 1px solid #6E6E6E4D;
+          border-radius: 10px;
+          background: white;
+          transition: border-color 0.2s ease;
+        }
+        
+        .input-container input {
+          width: 100%;
+          height: 100%;
+          border: none;
+          outline: none;
+          background: white !important;
+          padding: 17px 30px;
+          font-family: 'Manrope', sans-serif;
+          font-size: 20px;
+          color: #6E6E6E;
+        }
+        
+        .input-container input:-webkit-autofill,
+        .input-container input:-webkit-autofill:hover,
+        .input-container input:-webkit-autofill:focus,
+        .input-container input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px white inset !important;
+          -webkit-text-fill-color: #6E6E6E !important;
+          background-color: white !important;
+          background: white !important;
+        }
+        
+        .input-container input::placeholder {
+          color: #6E6E6E;
+          opacity: 1;
+        }
+        
+        .input-container.has-value {
+          border: 1px solid #5D2A8B99;
+        }
+        
+        .input-container.has-value input {
+          padding-top: 25px;
+          padding-bottom: 9px;
+          background: white;
+        }
+        
+        .input-label {
+          position: absolute;
+          top: -10px;
+          left: 30px;
+          font-family: 'Manrope', sans-serif;
+          font-weight: 400;
+          font-size: 14px;
+          color: #5D2A8B;
+          background: white;
+          padding: 0 5px;
+          pointer-events: none;
+          transition: all 0.2s ease;
+        }
+        
+        .input-container:focus-within {
+          border: 1px solid #5D2A8B99;
+        }
+        
+        .input-container:focus-within .input-label {
+          color: #5D2A8B;
+        }
+        
+        .input-container.error {
+          border-color: #ef4444;
+        }
+        
+        .password-toggle {
+          position: absolute;
+          right: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          cursor: pointer;
+          color: #6E6E6E;
+        }
       `}</style>
 
-      <div className="w-full max-w-[1439px] flex gap-10 relative">
-        {/* Left side - Illustration */}
-        <div className="hidden lg:block lg:w-[700px] lg:h-[1025px] rounded-[40px] overflow-hidden lg:mt-[44px] lg:ml-[45px]">
-          <Image
-            src="/Frame 335677.png"
-            alt="Data Capturing Illustration"
-            width={700}
-            height={1025}
-            priority
-            className="w-full h-full object-cover"
+      <div className="relative" style={{ width: "1440px", minHeight: "1000px", margin: "0 auto" }}>
+        {/* Left Image Section */}
+        <div 
+          className="absolute"
+          style={{
+            width: "700px",
+            height: "935px",
+            top: "35px",
+            left: "45px",
+            borderRadius: "40px",
+            background: "linear-gradient(180deg, #F4EFFA 0%, #5D2A8B1A 10%)",
+            overflow: "hidden"
+          }}
+        >
+          <Image 
+            src="/Frame 1.png" 
+            alt="Data Capturing Illustration" 
+            width={700} 
+            height={935} 
+            priority 
+            className="w-full h-full object-cover" 
           />
         </div>
 
-        {/* Right side - Login Form */}
-        <div className="w-full lg:w-[609px] lg:h-[1025px] bg-[#FBFAFC] rounded-[40px] flex flex-col relative lg:mt-[44px]">
+        {/* Right Form Section */}
+        <div 
+          className="absolute"
+          style={{
+            width: "609px",
+            height: "935px",
+            top: "35px",
+            left: "785px",
+            borderRadius: "40px",
+            background: "#FBFAFC"
+          }}
+        >
           {/* Logo */}
-          <div className="pt-6 pl-6 lg:pt-[50px] lg:pl-[50px]">
-            <Image width={55} height={48} src="/Group 1.png" alt="Company Logo" className="object-contain" />
+          <div 
+            className="absolute"
+            style={{
+              top: "50px",
+              left: "50px"
+            }}
+          >
+            <Image 
+              width={55} 
+              height={48} 
+              src="/Group 1.png" 
+              alt="Company Logo" 
+              className="object-contain" 
+            />
           </div>
 
           {/* Header */}
-          <div className="mt-6 px-6 lg:px-0 lg:absolute lg:top-[180px] lg:left-12 lg:right-12">
-            <h1 className="monument-extended text-[30px] lg:text-[30px] font-normal text-gray-900 mb-3 leading-[100%]">
+          <div 
+            className="absolute"
+            style={{
+              width: "501px",
+              height: "77px",
+              top: "136px",
+              left: "50px",
+              gap: "16px"
+            }}
+          >
+            <h1 
+              className="monument-extended"
+              style={{
+                fontSize: "30px",
+                fontWeight: 400,
+                lineHeight: "100%",
+                color: "#1A1A1A",
+                width: "317px",
+                height: "36px",
+                margin: 0,
+                marginBottom: "16px"
+              }}
+            >
               Welcome Back
             </h1>
-            <p className="manrope text-[15px] lg:text-[18px] font-light leading-[100%] text-gray-500">
+            <p 
+              className="manrope"
+              style={{
+                fontWeight: 300,
+                fontSize: "18px",
+                lineHeight: "100%",
+                color: "#6E6E6EB2",
+                width: "501px",
+                height: "25px",
+                margin: 0
+              }}
+            >
               Login to your account to continue tracking your measurement
             </p>
           </div>
 
           {/* Google Login Button */}
-          <div className="mt-4 px-6 lg:px-0 lg:absolute lg:top-[310px] lg:left-12 lg:right-12">
-            <button
-              type="button"
+          <div 
+            className="absolute"
+            style={{
+              top: "273px",
+              left: "50px"
+            }}
+          >
+            <button 
+              type="button" 
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 px-4 py-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm"
+              style={{
+                width: "484px",
+                height: "60px",
+                border: "1px solid #6E6E6E4D",
+                borderRadius: "10px",
+                background: "white",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                cursor: "pointer"
+              }}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M19.8 10.2273C19.8 9.52045 19.7364 8.83636 19.6182 8.18182H10.2V12.05H15.5891C15.3545 13.3 14.6182 14.3591 13.5182 15.0682V17.5773H16.8091C18.7091 15.8364 19.8 13.2727 19.8 10.2273Z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M10.2 20C12.9 20 15.1636 19.1045 16.8091 17.5773L13.5182 15.0682C12.5909 15.6682 11.4182 16.0227 10.2 16.0227C7.59545 16.0227 5.39091 14.2636 4.57273 11.9H1.16364V14.4909C2.79545 17.7591 6.26364 20 10.2 20Z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M4.57273 11.9C4.37273 11.3 4.25909 10.6591 4.25909 10C4.25909 9.34091 4.37273 8.7 4.57273 8.1V5.50909H1.16364C0.477273 6.85909 0.0909091 8.38636 0.0909091 10C0.0909091 11.6136 0.477273 13.1409 1.16364 14.4909L4.57273 11.9Z"
-                  fill="#FBBC04"
-                />
-                <path
-                  d="M10.2 3.97727C11.5318 3.97727 12.7136 4.43182 13.6409 5.30909L16.5682 2.38182C15.1591 1.08182 12.8955 0.227273 10.2 0.227273C6.26364 0.227273 2.79545 2.46818 1.16364 5.50909L4.57273 8.1C5.39091 5.73636 7.59545 3.97727 10.2 3.97727Z"
-                  fill="#EA4335"
-                />
+                <path d="M19.8 10.2273C19.8 9.52045 19.7364 8.83636 19.6182 8.18182H10.2V12.05H15.5891C15.3545 13.3 14.6182 14.3591 13.5182 15.0682V17.5773H16.8091C18.7091 15.8364 19.8 13.2727 19.8 10.2273Z" fill="#4285F4"/>
+                <path d="M10.2 20C12.9 20 15.1636 19.1045 16.8091 17.5773L13.5182 15.0682C12.5909 15.6682 11.4182 16.0227 10.2 16.0227C7.59545 16.0227 5.39091 14.2636 4.57273 11.9H1.16364V14.4909C2.79545 17.7591 6.26364 20 10.2 20Z" fill="#34A853"/>
+                <path d="M4.57273 11.9C4.37273 11.3 4.25909 10.6591 4.25909 10C4.25909 9.34091 4.37273 8.7 4.57273 8.1V5.50909H1.16364C0.477273 6.85909 0.0909091 8.38636 0.0909091 10C0.0909091 11.6136 0.477273 13.1409 1.16364 14.4909L4.57273 11.9Z" fill="#FBBC04"/>
+                <path d="M10.2 3.97727C11.5318 3.97727 12.7136 4.43182 13.6409 5.30909L16.5682 2.38182C15.1591 1.08182 12.8955 0.227273 10.2 0.227273C6.26364 0.227273 2.79545 2.46818 1.16364 5.50909L4.57273 8.1C5.39091 5.73636 7.59545 3.97727 10.2 3.97727Z" fill="#EA4335"/>
               </svg>
-              <span className="manrope text-gray-700 font-medium text-[15px]">Sign up with Google</span>
+              <span className="manrope" style={{ fontSize: "20px", fontWeight: 400, color: "#1A1A1A" }}>
+                Sign up with Google
+              </span>
             </button>
           </div>
 
           {/* Divider */}
-          <div className="flex items-center gap-4 mt-4 px-6 lg:px-0 lg:absolute lg:top-[390px] lg:left-12 lg:right-12">
-            <div className="flex-1 h-px bg-gray-300" />
-            <span className="manrope text-sm text-gray-400">or</span>
-            <div className="flex-1 h-px bg-gray-300" />
+          <div 
+            className="absolute flex items-center"
+            style={{
+              width: "484px",
+              height: "25px",
+              top: "393px",
+              left: "50px"
+            }}
+          >
+            <div style={{ flex: 1, height: "1px", background: "#d1d5db" }} />
+            <span className="manrope" style={{ padding: "0 16px", fontSize: "14px", color: "#9ca3af" }}>or</span>
+            <div style={{ flex: 1, height: "1px", background: "#d1d5db" }} />
           </div>
 
-          {/* Form Fields */}
-          <div className="mt-4 px-6 pb-8 lg:px-0 lg:absolute lg:top-[438px] lg:left-[62px] lg:right-[63px] space-y-6">
-            {/* Email Field */}
-            <div className={`input-with-notch ${formValues.email ? "has-value" : ""} ${errors.email ? "error" : ""}`}>
-              <input
-                type="email"
-                name="email"
-                value={formValues.email}
-                onChange={handleChange}
-                placeholder="Demola"
-                className="manrope w-full lg:w-[484px] h-[75px] px-6 pt-6 pb-2 focus:outline-none bg-white text-gray-900 text-[20px] placeholder-gray-400"
-              />
-              {formValues.email && (
-                <label className="manrope absolute left-[18px] top-[2px] text-[11px] text-gray-500 font-medium bg-white px-1">
-                  Email
-                </label>
+          {/* Form */}
+          <form onSubmit={handleSubmit}>
+            {/* Email Input */}
+            <div 
+              className="absolute"
+              style={{
+                top: "463px",
+                left: "50px"
+              }}
+            >
+              <div className={`input-container ${formValues.email ? 'has-value' : ''} ${errors.email ? 'error' : ''}`}>
+                <input
+                  type="email"
+                  name="email"
+                  value={formValues.email}
+                  onChange={handleChange}
+                  placeholder="you@example.com"
+                />
+                {formValues.email && (
+                  <label className="input-label">Email</label>
+                )}
+              </div>
+              {errors.email && (
+                <p style={{ color: "#ef4444", fontSize: "14px", marginTop: "4px", fontFamily: "Manrope" }}>
+                  {errors.email}
+                </p>
               )}
-              {errors.email && <p className="manrope mt-2 text-sm text-red-500 ml-2">{errors.email}</p>}
             </div>
 
-            {/* Password Field */}
-            <div
-              className={`input-with-notch ${formValues.password ? "has-value" : ""} ${errors.password ? "error" : ""}`}
+            {/* Password Input with Forgot Password */}
+            <div 
+              className="absolute"
+              style={{
+                top: "568px",
+                left: "50px",
+                width: "484px",
+                height: "88px"
+              }}
             >
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={formValues.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className="manrope w-full lg:w-[484px] h-[75px] px-6 pt-6 pb-2 pr-14 focus:outline-none bg-white text-gray-900 text-[20px] placeholder-gray-400"
-              />
-              {formValues.password && (
-                <label className="manrope absolute left-[18px] top-[2px] text-[11px] text-gray-500 font-medium bg-white px-1">
-                  Password
-                </label>
+              <div className={`input-container ${formValues.password ? 'has-value' : ''} ${errors.password ? 'error' : ''}`}>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formValues.password}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  style={{ paddingRight: "50px" }}
+                />
+                {formValues.password && (
+                  <label className="input-label">Password</label>
+                )}
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p style={{ color: "#ef4444", fontSize: "14px", marginTop: "4px", fontFamily: "Manrope" }}>
+                  {errors.password}
+                </p>
               )}
+              {/* Forgot Password Link */}
               <Link
                 href="/auth/forgot-password"
-                className="manrope absolute right-0 -top-10 text-[14px] text-[#5D2A8B] font-semibold hover:underline"
+                style={{
+                  fontFamily: "Manrope",
+                  fontWeight: 300,
+                  fontSize: "16px",
+                  lineHeight: "100%",
+                  textAlign: "right",
+                  textDecoration: "underline",
+                  color: "#5D2A8B",
+                  display: "block",
+                  width: "484px",
+                  height: "22px",
+                  marginTop: "6px"
+                }}
               >
                 Forgot Password?
               </Link>
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-              {errors.password && <p className="manrope mt-2 text-sm text-red-500 ml-2">{errors.password}</p>}
             </div>
 
-            {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              type="button"
-              disabled={isPending}
-              className="manrope w-full lg:w-[484px] h-[60px] bg-[#5D2A8B] hover:bg-[#4a2170] text-white font-semibold rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-md text-[16px] mt-4"
+            {/* Login Button */}
+            <div 
+              className="absolute"
+              style={{
+                top: "782px",
+                left: "50px"
+              }}
             >
-              {isPending ? "Logging in..." : "Login"}
-            </button>
-          </div>
+              <button 
+                type="submit" 
+                disabled={isPending}
+                style={{
+                  width: "484px",
+                  height: "60px",
+                  background: "#5D2A8B",
+                  borderRadius: "10px",
+                  border: "none",
+                  color: "white",
+                  fontFamily: "Manrope",
+                  fontWeight: 600,
+                  fontSize: "20px",
+                  cursor: isPending ? "not-allowed" : "pointer",
+                  opacity: isPending ? 0.7 : 1
+                }}
+              >
+                {isPending ? 'Logging in...' : 'Login'}
+              </button>
+            </div>
+          </form>
 
           {/* Footer */}
-          <div className="mt-6 px-6 lg:px-0 lg:absolute lg:bottom-16 lg:left-12 lg:right-12 text-center">
-            <p className="manrope text-gray-600 text-[15px]">
+          <div 
+            className="absolute"
+            style={{
+              top: "860px",
+              left: "164px",
+              width: "257px",
+              height: "25px"
+            }}
+          >
+            <p 
+              className="manrope"
+              style={{
+                fontWeight: 300,
+                fontSize: "18px",
+                lineHeight: "100%",
+                color: "#6E6E6E",
+                textAlign: "center",
+                margin: 0
+              }}
+            >
               Don`&apos;`,t have an account?{" "}
-              <Link href="/auth/signup" className="text-[#5D2A8B] font-semibold hover:underline">
+              <Link
+                href="/auth/signup"
+                style={{
+                  fontWeight: 500,
+                  color: "#5D2A8B",
+                  textDecoration: "none"
+                }}
+              >
                 Sign up
               </Link>
             </p>

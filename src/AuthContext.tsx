@@ -10,7 +10,7 @@ export interface User {
   email: string;
   phone: string | null;
   organizationId: string;
-  role: string;
+  // role: string;
   // [key: string]: any;
 }
 
