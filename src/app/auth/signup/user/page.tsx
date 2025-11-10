@@ -69,7 +69,7 @@ export default function SignupPage() {
       
       console.log('🚀 Sending USER registration to backend:', payload);
 
-      const { data } = await client.post('/api/auth/register', payload);
+      const { data } = await client.post('https://datacapture-backend.onrender.com/api/auth/register', payload);
       return data;
     },
     onSuccess: () => {
