@@ -145,8 +145,9 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 
-const ReadyToCapture = () => {
+const CallToActionSection = () => {
   const router = useRouter()
 
   const handleUploadClick = () => {
@@ -154,106 +155,134 @@ const ReadyToCapture = () => {
   }
 
   return (
-    <div
-      className="bg-[#5D2A8B] text-white shadow-md relative mx-auto my-12 lg:my-20"
+    <section 
+      className="relative bg-[#5D2A8B] text-white overflow-hidden w-full"
       style={{
-        width: "calc(100% - 2rem)",
-        maxWidth: "1255px",
-        height: "auto",
-        minHeight: "auto",
-        borderRadius: "20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        maxWidth: "1441px",
+        minHeight: "417px",
+        marginBottom: "200px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        padding: "0 20px",
       }}
     >
-      <div
-        className="w-full flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0 px-6 py-8 lg:px-16 lg:py-12"
+      {/* Inner Container */}
+      <div 
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          padding: "95px 20px 20px 20px",
+        }}
       >
         <div
-          className="flex flex-col items-center lg:items-start text-center lg:text-left"
           style={{
-            width: "100%",
             maxWidth: "605px",
-            height: "auto",
-            gap: "16px",
+            width: "100%",
           }}
         >
-          <h2
+          {/* H1 and P Tag Container */}
+          <div 
             style={{
-              fontFamily: "Monument Extended, sans-serif",
-              fontSize: "clamp(24px, 6vw, 36px)",
-              fontWeight: 400,
-              lineHeight: "1.1",
-              textAlign: "center",
               width: "100%",
-              margin: 0,
+              maxWidth: "605px",
+              gap: "16px",
+              marginBottom: "32px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            Ready to capture now?
-          </h2>
+            <h2 
+              style={{
+                fontFamily: "Monument Extended",
+                fontWeight: 400,
+                fontSize: "clamp(24px, 5vw, 36px)",
+                lineHeight: "100%",
+                letterSpacing: "0%",
+                textAlign: "center",
+                color: "#FFFFFF",
+                width: "100%",
+                margin: 0,
+              }}
+            >
+              Ready to capture now?
+            </h2>
+            <p 
+              style={{
+                fontFamily: "Manrope",
+                fontWeight: 400,
+                fontSize: "clamp(16px, 3vw, 20px)",
+                lineHeight: "100%",
+                letterSpacing: "0%",
+                textAlign: "center",
+                color: "#FFFFFFB2",
+                width: "100%",
+                maxWidth: "532px",
+                margin: 0,
+              }}
+            >
+              Experience instant, accurate measurements with AI.
+            </p>
+          </div>
 
-          <p
-            style={{
-              fontFamily: "Manrope, sans-serif",
-              fontSize: "clamp(16px, 4vw, 20px)",
-              fontWeight: 400,
-              lineHeight: "1.4",
-              textAlign: "center",
-              width: "100%",
-              opacity: 0.9,
-              margin: 0,
+          {/* Upload Button */}
+          <div className="flex justify-center">
+          <button
+            onClick={handleUploadClick}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "scale(1.06)"
+              e.currentTarget.style.boxShadow = "0 14px 36px rgba(255,255,255,0.3)"
+              e.currentTarget.style.border = "2px solid #C8A2E0"
             }}
-          >
-            Experience instant, accurate measurements with AI.
-          </p>
-        </div>
-
-        <button
-          onClick={handleUploadClick}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.06)"
-            e.currentTarget.style.boxShadow = "0 14px 36px rgba(255,255,255,0.3)"
-            e.currentTarget.style.border = "2px solid #C8A2E0"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)"
-            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)"
-            e.currentTarget.style.border = "2px solid transparent"
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = "scale(0.98)"
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = "scale(1.06)"
-          }}
-          className="inline-flex items-center justify-center bg-white text-[#5D2A8B] font-semibold transition-all duration-300 ease-in-out cursor-pointer hover:bg-gray-50 active:scale-95"
-          style={{
-            width: "clamp(140px, 40vw, 154px)",
-            height: "clamp(44px, 8vw, 42px)",
-            padding: "10px 20px",
-            borderRadius: "30px",
-            transformOrigin: "center",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            border: "2px solid transparent",
-            gap: "15px",
-            flexShrink: 0,
-          }}
-        >
-          <span
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "scale(1)"
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)"
+              e.currentTarget.style.border = "2px solid transparent"
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = "scale(0.98)"
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = "scale(1.06)"
+            }}
+            className="inline-flex items-center justify-center bg-white text-[#5D2A8B] font-semibold transition-all duration-300 ease-in-out cursor-pointer"
             style={{
-              fontSize: "clamp(14px, 3vw, 16px)",
-              lineHeight: "100%",
-              fontFamily: "Manrope, sans-serif",
+              paddingLeft: "24px",
+              paddingRight: "24px",
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              borderRadius: "9999px",
+              transformOrigin: "center",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              border: "2px solid transparent",
+              fontFamily: "Manrope",
               fontWeight: 600,
+              fontSize: "16px",
             }}
           >
             Upload Image
-          </span>
-        </button>
+          </button>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Decorative Image */}
+      <div 
+        className="absolute hidden md:block"
+        style={{
+          top: "4px",
+          right: "32px",
+        }}
+      >
+        <Image
+          src="/Warm.png"
+          alt="silhouette"
+          width={140}
+          height={220}
+          className="object-contain"
+        />
+      </div>
+    </section>
   )
 }
 
-export default ReadyToCapture
+export default CallToActionSection
