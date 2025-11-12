@@ -27,9 +27,9 @@ const Features = () => {
 
   return (
     <section className="py-20 bg-white flex flex-col items-center" style={{ marginBottom: "200px" }}>
-      {/* Header Section */}
+      {/* Desktop Header Section */}
       <div 
-        className="text-center mb-12"
+        className="text-center mb-12 hidden md:block"
         style={{
           width: "532px",
           height: "113px",
@@ -69,9 +69,46 @@ const Features = () => {
         </p>
       </div>
 
-      {/* Inner colored background container */}
+      {/* Mobile Header Section */}
+      <div 
+        className="text-center mb-12 md:hidden"
+        style={{
+          width: "290px",
+          margin: "0 auto 50px",
+        }}
+      >
+        <h2
+          className="text-[#1A1A1A]"
+          style={{
+            fontFamily: "Monument Extended",
+            fontWeight: 400,
+            fontSize: "24px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+            textAlign: "center",
+            marginBottom: "16px",
+          }}
+        >
+          Our features
+        </h2>
+        <p
+          className="text-[#6E6E6EB2]"
+          style={{
+            fontFamily: "Manrope",
+            fontWeight: 400,
+            fontSize: "14px",
+            lineHeight: "110%",
+            letterSpacing: "0%",
+            textAlign: "center",
+          }}
+        >
+          Our core tools built with intelligent features that make precision effortless.
+        </p>
+      </div>
+
+      {/* Desktop Inner colored background container */}
       <div
-        className="bg-[#F4EFFA] rounded-[20px] flex justify-center items-center"
+        className="bg-[#F4EFFA] rounded-[20px] justify-center items-center hidden md:flex"
         style={{
           width: "1255px",
           height: "876px",
@@ -216,6 +253,74 @@ const Features = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Mobile Cards Container */}
+      <div
+        className="md:hidden flex flex-col items-center"
+        style={{
+          width: "100%",
+          maxWidth: "390px",
+          margin: "0 auto",
+          gap: "20px",
+        }}
+      >
+        {features.map((feature, idx) => (
+          <div
+            key={idx}
+            className="bg-white rounded-[11.63px] flex items-start"
+            style={{
+              width: "330px",
+              minHeight: "140px",
+              boxShadow: "0px 4px 16px 0px #5D2A8B1A",
+              padding: "20px",
+              gap: "16px",
+            }}
+          >
+            {/* Icon */}
+            <div
+              className="flex items-center justify-center flex-shrink-0"
+              style={{
+                width: "50px",
+                height: "50px",
+              }}
+            >
+              <Image
+                src={feature.icon}
+                alt={feature.title}
+                width={50}
+                height={50}
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+
+            {/* Text */}
+            <div style={{ flex: 1 }}>
+              <h3 
+                className="text-[#1A1A1A] mb-2"
+                style={{
+                  fontFamily: "Manrope",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                  lineHeight: "110%",
+                }}
+              >
+                {feature.title}
+              </h3>
+              <p 
+                className="text-[#6E6E6EB2]"
+                style={{
+                  fontFamily: "Manrope",
+                  fontWeight: 400,
+                  fontSize: "12px",
+                  lineHeight: "130%",
+                }}
+              >
+                {feature.description}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

@@ -3,9 +3,56 @@
 import React, { useState } from 'react';
 import { Search, Bell, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
+import { useProfile } from '@/api/hooks/useProfile';
+import { useRouter } from 'next/navigation';
 
 export const UserTopBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const { profile, loading, error } = useProfile();
+  const router = useRouter();
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  // Log errors for debugging
+  React.useEffect(() => {
+    if (error) {
+      console.error('Profile loading error:', error);
+    }
+    if (profile) {
+      console.log('Profile loaded successfully:', profile);
+    }
+  }, [error, profile]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/auth/login');
+  };
+
+  const getInitials = () => {
+    if (profile?.firstName && profile?.lastName) {
+      return `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
+    }
+    if (profile?.email) {
+      return profile.email[0].toUpperCase();
+    }
+    return 'U';
+  };
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   return (
     <>
@@ -16,10 +63,12 @@ export const UserTopBar = () => {
 
       {/* Positioned inside the white navigation bar at top right - Absolute position */}
       <div 
-        className="absolute flex items-center gap-3 z-30"
+        className="absolute flex items-center gap-3"
         style={{
           top: '124px',
-          left: '850px'
+          left: '850px',
+          zIndex: 100,
+          pointerEvents: 'auto'
         }}
       >
         {/* Search */}
@@ -53,29 +102,39 @@ export const UserTopBar = () => {
             borderRadius: '40px',
             border: '1px solid #E4D8F3'
           }}
+          onClick={() => console.log('Notification clicked')}
         >
           <Bell className="w-5 h-5 text-gray-600" />
         </button>
 
         {/* Avatar and Dropdown */}
-        <div className="relative">
-          <div 
-            className="flex items-center cursor-pointer"
+        <div className="relative" ref={dropdownRef} style={{ zIndex: 101 }}>
+          <button 
+            className="flex items-center cursor-pointer bg-transparent border-none p-0"
             style={{
               width: '68px',
               height: '40px',
-              gap: '6px'
+              gap: '6px',
+              pointerEvents: 'auto'
             }}
-            onClick={() => setShowDropdown(!showDropdown)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Avatar clicked, current state:', showDropdown);
+              setShowDropdown(!showDropdown);
+              console.log('New state should be:', !showDropdown);
+            }}
+            type="button"
           >
             {/* Avatar Image */}
             <div 
-              className="relative overflow-hidden"
+              className="relative overflow-hidden flex items-center justify-center"
               style={{
                 width: '40px',
                 height: '40px',
                 borderRadius: '40px',
-                background: '#6D1E1E'
+                background: '#6D1E1E',
+                pointerEvents: 'none'
               }}
             >
               <Image 
@@ -84,6 +143,7 @@ export const UserTopBar = () => {
                 width={40} 
                 height={40}
                 className="object-cover"
+                style={{ pointerEvents: 'none' }}
               />
             </div>
 
@@ -92,31 +152,76 @@ export const UserTopBar = () => {
               className="text-gray-600"
               style={{
                 width: '22px',
-                height: '22px'
+                height: '22px',
+                pointerEvents: 'none'
               }}
             />
-          </div>
+          </button>
 
           {/* Dropdown Menu */}
           {showDropdown && (
             <div 
-              className="absolute bg-white shadow-lg rounded-lg overflow-hidden"
+              className="absolute manrope"
               style={{
-                top: '50px',
+                top: '48px',
                 right: '0',
                 width: '200px',
-                border: '1px solid #E4D8F3'
+                background: '#F4EFFA',
+                borderRadius: '15px',
+                zIndex: 99999,
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+                padding: '20px'
               }}
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="manrope py-2">
-                <button className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm text-gray-700">
+              {/* Menu Items */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <button 
+                  className="w-full text-left transition-colors"
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    fontFamily: 'Manrope',
+                    fontWeight: 500,
+                    fontSize: '18px',
+                    color: '#1A1A1A',
+                    cursor: 'pointer',
+                    padding: 0
+                  }}
+                  onClick={() => {
+                    setShowDropdown(false);
+                    router.push('/user/profile');
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#5D2A8B';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#1A1A1A';
+                  }}
+                >
                   Profile
                 </button>
-                <button className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm text-gray-700">
-                  Settings
-                </button>
-                <button className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm text-red-600">
-                  Logout
+                <button 
+                  className="w-full text-left transition-colors"
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    fontFamily: 'Manrope',
+                    fontWeight: 500,
+                    fontSize: '18px',
+                    color: '#1A1A1A',
+                    cursor: 'pointer',
+                    padding: 0
+                  }}
+                  onClick={handleLogout}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = '#5D2A8B';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = '#1A1A1A';
+                  }}
+                >
+                  Sign Out
                 </button>
               </div>
             </div>
