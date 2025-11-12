@@ -215,7 +215,7 @@ const Footer = () => {
                         color: "#6E6E6EB2",
                       }}
                     >
-                      DC@emailaddress.com.ng
+                      Gamai@raoatech.com
                     </a>
                   </li>
                   <li
@@ -228,9 +228,11 @@ const Footer = () => {
                       color: "#6E6E6EB2",
                     }}
                   >
-                    14, Tuggar Avenue,<br />
-                    Abagana, Yaba, Lagos State,<br />
-                    Nigeria
+                    1A, Huges Avenue, <br />
+Alagomeji, Yaba, Lagos state.<br />
+Nigeria.
+                    
+                   
                   </li>
                 </ul>
               </div>
@@ -245,7 +247,7 @@ const Footer = () => {
               <Link href="#" className="hover:text-[#5D2A8B] transition-colors">Terms of Services</Link>
             </div>
             <p>
-              © {currentYear} Powered by Ravetech. All rights reserved.
+              © {currentYear} Powered by Raoatech. All rights reserved.
             </p>
           </div>
         </div>

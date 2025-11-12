@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import { UserTopBar } from './user-topbar';
 
 interface MeasurementData {
   chest: string;
@@ -32,6 +32,9 @@ export const MeasurementTopNav: React.FC<MeasurementTopNavProps> = ({
         .manrope { font-family: 'Manrope', sans-serif; }
       `}</style>
 
+      {/* User TopBar with Search, Notification, and Avatar */}
+      <UserTopBar />
+
       <div 
         className="absolute bg-white overflow-visible z-20 shadow-sm"
         style={{
@@ -44,89 +47,6 @@ export const MeasurementTopNav: React.FC<MeasurementTopNavProps> = ({
           position: 'relative'
         }}
       >
-        {/* Top Right Controls - Search, Notification, Avatar */}
-        <div 
-          className="absolute flex items-center gap-3 z-30"
-          style={{
-            top: '20px',
-            right: '24px'
-          }}
-        >
-          {/* Search */}
-          <div 
-            className="bg-white flex items-center"
-            style={{
-              width: '285px',
-              height: '40px',
-              borderRadius: '40px',
-              border: '1px solid #E4D8F3',
-              paddingLeft: '16px',
-              paddingRight: '16px',
-              gap: '8px'
-            }}
-          >
-            <Search className="w-5 h-5 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search" 
-              className="manrope flex-1 outline-none bg-transparent text-sm"
-              style={{ color: '#6E6E6E' }}
-            />
-          </div>
-
-          {/* Notification */}
-          <button 
-            className="bg-[#FBFAFC] flex items-center justify-center hover:bg-gray-100"
-            style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '40px',
-              border: '1px solid #E4D8F3'
-            }}
-          >
-            <Bell className="w-5 h-5 text-gray-600" />
-          </button>
-
-          {/* Avatar */}
-          <div className="relative">
-            <div 
-              className="flex items-center cursor-pointer"
-              style={{
-                width: '68px',
-                height: '40px',
-                gap: '6px'
-              }}
-            >
-              {/* Avatar Image */}
-              <div 
-                className="relative overflow-hidden"
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '40px',
-                  background: '#6D1E1E'
-                }}
-              >
-                <Image 
-                  src="/Frame 1707479300.png" 
-                  alt="User Avatar" 
-                  width={40} 
-                  height={40}
-                  className="object-cover"
-                />
-              </div>
-
-              {/* Dropdown Icon */}
-              <ChevronDown 
-                className="text-gray-600"
-                style={{
-                  width: '22px',
-                  height: '22px'
-                }}
-              />
-            </div>
-          </div>
-        </div>
 
         <div className="flex flex-col justify-center h-full">
           {/* Current Body Measurement Label */}

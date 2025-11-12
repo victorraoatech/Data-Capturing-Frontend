@@ -29,18 +29,18 @@ const HeroSection: React.FC = () => {
       className="relative"
       style={{
         width: "100%",
-        height: "742px",
-        marginTop: "110px", // Account for fixed navbar
-        marginBottom: "200px",
         background: "#F4EFFA",
       }}
     >
+      {/* Desktop Hero */}
       <div 
-        className="relative"
+        className="relative hidden md:block"
         style={{
           width: "1440px",
           height: "742px",
           margin: "0 auto",
+          marginTop: "110px",
+          marginBottom: "200px",
         }}
       >
         {/* Warm Icon - Overlapping with heading text */}
@@ -258,7 +258,7 @@ const HeroSection: React.FC = () => {
                           lineHeight: "100%",
                         }}
                       >
-                        Upload Image
+                      Take Image
                       </span>
                     </div>
                   </label>
@@ -312,8 +312,235 @@ const HeroSection: React.FC = () => {
         >
           &quot;Images are processed securely and deleted after 3 hours. No training on user data.&quot;
         </div>
+      </div>
 
+      {/* Mobile Hero */}
+      <div 
+        className="relative md:hidden"
+        style={{
+          width: "390px",
+          margin: "0 auto",
+          marginTop: "102px",
+          paddingBottom: "60px",
+        }}
+      >
+        {/* Left Container - Text Content */}
+        <div 
+          className="relative"
+          style={{
+            width: "311px",
+            margin: "0 auto",
+            paddingTop: "68px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          {/* Warm Icon - Mobile (overlapping with heading text, like desktop) */}
+          <div 
+            className="absolute"
+            style={{
+              top: "58px",
+              left: "10px",
+              zIndex: 1,
+            }}
+          >
+            <Image
+              src="/Warm.png"
+              alt=""
+              width={50}
+              height={45}
+              className="object-contain"
+            />
+          </div>
 
+          {/* Spiral Icon - Mobile (right side near description, like desktop) */}
+          <div 
+            className="absolute"
+            style={{
+              top: "200px",
+              right: "10px",
+              zIndex: 1,
+            }}
+          >
+            <Image
+              src="/Spiral 1.png"
+              alt=""
+              width={45}
+              height={45}
+              className="object-contain"
+            />
+          </div>
+
+          {/* Heading */}
+          <h1 
+            className="text-[#1A1A1A] text-center relative"
+            style={{
+              fontFamily: "Monument Extended",
+              fontWeight: 400,
+              fontSize: "30px",
+              lineHeight: "100%",
+              letterSpacing: "0%",
+              width: "311px",
+              height: "144px",
+              zIndex: 2,
+            }}
+          >
+            Smart, instant &<br />
+            accurate way<br />
+            to measure
+          </h1>
+
+          {/* Description */}
+          <p 
+            className="text-[#6E6E6EB2] text-center relative"
+            style={{
+              fontFamily: "Manrope",
+              fontWeight: 400,
+              fontSize: "16px",
+              lineHeight: "110%",
+              letterSpacing: "0%",
+              width: "311px",
+              zIndex: 2,
+            }}
+          >
+            Upload a single image to get precise body or object measurements with our AI-powered engine.
+          </p>
+        </div>
+
+        {/* Image Container - Upload Card */}
+        <div 
+          style={{
+            width: "310px",
+            height: "274px",
+            margin: "46px auto 0",
+            borderRadius: "15px",
+            boxShadow: "0px 8px 24px 0px #5D2A8B1A",
+            background: "#FFFFFF",
+            position: "relative",
+          }}
+        >
+          {/* Inner Container with Dashed Border */}
+          <div 
+            className="bg-[#F4EFFA]"
+            style={{
+              width: "252px",
+              height: "207px",
+              position: "absolute",
+              top: "31px",
+              left: "29px",
+              borderRadius: "15px",
+              border: "1px dashed #EB83FF",
+            }}
+          >
+            {uploadedImage ? (
+              <div className="w-full h-full rounded-2xl overflow-hidden relative">
+                <img src={uploadedImage} alt="preview" className="w-full h-full object-cover" />
+                <button
+                  onClick={resetImage}
+                  className="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs text-gray-700 px-3 py-1 rounded-full shadow-md transition-all"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Left Image */}
+                <div 
+                  className="absolute"
+                  style={{
+                    width: "100px",
+                    height: "150px",
+                    top: "15px",
+                    left: "-2px",
+                  }}
+                >
+                  <Image
+                    src="/gbarkz-vqKnuG8GaQc-unsplash-removebg-preview 1.png"
+                    alt="silhouette"
+                    width={100}
+                    height={150}
+                    className="object-contain"
+                  />
+                </div>
+
+                {/* Right Image */}
+                <div 
+                  className="absolute"
+                  style={{
+                    width: "120px",
+                    height: "180px",
+                    top: "1px",
+                    right: "-2px",
+                  }}
+                >
+                  <Image
+                    src="/recha-oktaviani-t__61ap00Mc-unsplash-removebg-preview 1.png"
+                    alt="object"
+                    width={120}
+                    height={180}
+                    className="object-contain"
+                  />
+                </div>
+
+                {/* Upload Button */}
+                <div 
+                  className="absolute"
+                  style={{
+                    bottom: "15px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                  }}
+                >
+                  <label htmlFor="image-upload-mobile" className="cursor-pointer inline-block">
+                    <div
+                      role="button"
+                      aria-label="Upload Image"
+                      className="flex items-center justify-center bg-[#5D2A8B] text-white transition-all duration-300 ease-in-out"
+                      style={{
+                        width: "130px",
+                        height: "36px",
+                        borderRadius: "18px",
+                        padding: "6px 12px",
+                        border: "2px solid transparent",
+                        fontFamily: "Manrope",
+                        fontWeight: 600,
+                        fontSize: "12px",
+                        lineHeight: "100%",
+                      }}
+                    >
+                      Take Image
+                    </div>
+                  </label>
+
+                  <input
+                    id="image-upload-mobile"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Privacy Message */}
+        <div 
+          className="text-[#6E6E6EB2] text-center"
+          style={{
+            width: "309px",
+            margin: "10px auto 0",
+            fontFamily: "Manrope",
+            fontWeight: 300,
+            fontSize: "12px",
+            lineHeight: "120%",
+            letterSpacing: "0%",
+          }}
+        >
+          &quot;Images are processed securely and deleted after 3 hours. No training on user data.&quot;
+        </div>
       </div>
     </section>
   )

@@ -550,6 +550,7 @@ export default function LoginPage() {
   })
   const [errors, setErrors] = useState<Partial<FormValues>>({})
   const [showPassword, setShowPassword] = useState(false)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   const { mutate: submitMutate, isPending } = useMutation({
     mutationFn: async (values: { email: string; password: string }) => {
@@ -564,6 +565,7 @@ export default function LoginPage() {
       return data
     },
     onSuccess: (data) => {
+      setApiError(null); // Clear any previous errors
       if (data.token && data.user) {
         signIn(data.token, data.user);
         
@@ -586,9 +588,11 @@ export default function LoginPage() {
           router.replace("/user");
         }
       } else {
+        const errorMsg = "Invalid response from server";
+        setApiError(errorMsg);
         toast({ 
           title: "Login Error",
-          description: "Invalid response from server",
+          description: errorMsg,
           variant: "destructive"
         });
       }
@@ -599,6 +603,7 @@ export default function LoginPage() {
         error?.response?.data?.message ||
         error?.message ||
         "Login failed"
+      setApiError(message);
       toast({ 
         title: "Login Failed",
         description: message,
@@ -627,6 +632,7 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setApiError(null); // Clear previous API errors
     if (!validate()) return
     submitMutate({ email: formValues.email, password: formValues.password })
   }
@@ -874,14 +880,63 @@ export default function LoginPage() {
             <div style={{ flex: 1, height: "1px", background: "#d1d5db" }} />
           </div>
 
+          {/* Error Alert */}
+          {apiError && (
+            <div 
+              className="absolute"
+              style={{
+                top: "433px",
+                left: "50px",
+                width: "484px"
+              }}
+            >
+              <div 
+                className="manrope"
+                style={{
+                  background: "#FEE2E2",
+                  border: "1px solid #EF4444",
+                  borderRadius: "10px",
+                  padding: "12px 16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px"
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M10 6V10" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M10 14H10.01" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span style={{ color: "#991B1B", fontSize: "14px", flex: 1 }}>
+                  {apiError}
+                </span>
+                <button 
+                  type="button"
+                  onClick={() => setApiError(null)}
+                  style={{ 
+                    background: "none", 
+                    border: "none", 
+                    cursor: "pointer",
+                    color: "#991B1B",
+                    fontSize: "18px",
+                    lineHeight: "1"
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Form */}
           <form onSubmit={handleSubmit}>
             {/* Email Input */}
             <div 
               className="absolute"
               style={{
-                top: "463px",
-                left: "50px"
+                top: apiError ? "513px" : "463px",
+                left: "50px",
+                transition: "top 0.3s ease"
               }}
             >
               <div className={`input-container ${formValues.email ? 'has-value' : ''} ${errors.email ? 'error' : ''}`}>
@@ -907,10 +962,11 @@ export default function LoginPage() {
             <div 
               className="absolute"
               style={{
-                top: "568px",
+                top: apiError ? "618px" : "568px",
                 left: "50px",
                 width: "484px",
-                height: "88px"
+                height: "88px",
+                transition: "top 0.3s ease"
               }}
             >
               <div className={`input-container ${formValues.password ? 'has-value' : ''} ${errors.password ? 'error' : ''}`}>
@@ -963,8 +1019,9 @@ export default function LoginPage() {
             <div 
               className="absolute"
               style={{
-                top: "782px",
-                left: "50px"
+                top: apiError ? "832px" : "782px",
+                left: "50px",
+                transition: "top 0.3s ease"
               }}
             >
               <button 
