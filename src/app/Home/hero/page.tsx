@@ -1,3 +1,4 @@
+
 "use client"
 
 import React, { useState } from "react"
@@ -6,19 +7,26 @@ import { useRouter } from "next/navigation"
 
 const HeroSection: React.FC = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
   const router = useRouter()
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type?: string) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
       reader.onload = (event) => {
         const imageDataUrl = event.target?.result as string
         setUploadedImage(imageDataUrl)
-        router.push(`/upload-image`)
+        router.push(`/upload-image?type=${type || 'yourself'}`)
       }
       reader.readAsDataURL(file)
     }
+    setShowModal(false)
+  }
+
+  const handleMeasurementChoice = (type: 'yourself' | 'object') => {
+    const input = document.getElementById(`image-upload-${type}`) as HTMLInputElement
+    input?.click()
   }
 
   const resetImage = () => setUploadedImage(null)
@@ -30,8 +38,108 @@ const HeroSection: React.FC = () => {
       style={{
         width: "100%",
         background: "#F4EFFA",
+        position: "relative",
       }}
     >
+      {/* Modal - Single instance */}
+      {showModal && (
+        <>
+          {/* Overlay for closing modal */}
+          <div 
+            className="fixed inset-0 z-40"
+            onClick={() => setShowModal(false)}
+          />
+          
+          {/* Modal Content */}
+          <div 
+            className="absolute z-50"
+            style={{
+              width: "214px",
+              height: "98px",
+              top: "390px",
+              left: "1191px",
+              borderRadius: "10px",
+              border: "1px solid #5D2A8B",
+              paddingTop: "12px",
+              paddingRight: "20px",
+              paddingBottom: "12px",
+              paddingLeft: "20px",
+              gap: "6px",
+              boxShadow: "0px 4px 4px 0px #5D2A8B1A",
+              background: "#FFFFFF",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* Measure Yourself */}
+            <button
+              onClick={() => handleMeasurementChoice('yourself')}
+              style={{
+                fontFamily: "Manrope",
+                fontWeight: 400,
+                fontSize: "20px",
+                lineHeight: "100%",
+                letterSpacing: "0%",
+                textDecoration: "underline",
+                textDecorationStyle: "solid",
+                textUnderlineOffset: "15%",
+                color: "#1A1A1A",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                padding: 0,
+                width: "159px",
+                height: "27px",
+              }}
+            >
+              Measure Yourself
+            </button>
+
+            {/* Measure an Object */}
+            <button
+              onClick={() => handleMeasurementChoice('object')}
+              style={{
+                fontFamily: "Manrope",
+                fontWeight: 400,
+                fontSize: "20px",
+                lineHeight: "100%",
+                letterSpacing: "0%",
+                textDecoration: "underline",
+                textDecorationStyle: "solid",
+                textUnderlineOffset: "15%",
+                color: "#1A1A1A",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                padding: 0,
+                width: "174px",
+                height: "27px",
+              }}
+            >
+              Measure an Object
+            </button>
+
+            {/* Hidden file inputs */}
+            <input
+              id="image-upload-yourself"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e, 'yourself')}
+              className="hidden"
+            />
+            <input
+              id="image-upload-object"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e, 'object')}
+              className="hidden"
+            />
+          </div>
+        </>
+      )}
+
       {/* Desktop Hero */}
       <div 
         className="relative hidden md:block"
@@ -204,7 +312,6 @@ const HeroSection: React.FC = () => {
                 </div>
 
                 {/* Upload Button and Text */}
-               
                 <div 
                   className="absolute"
                   style={{
@@ -216,10 +323,11 @@ const HeroSection: React.FC = () => {
                   }}
                 >
                   {/* Upload Button */}
-                  <label htmlFor="image-upload" className="cursor-pointer inline-block">
+                  <label className="cursor-pointer inline-block">
                     <div
                       role="button"
                       aria-label="Upload Image"
+                      onClick={() => setShowModal(true)}
                       className="flex items-center justify-center bg-[#5D2A8B] text-white transition-all duration-300 ease-in-out"
                       style={{
                         width: "173px",
@@ -258,18 +366,22 @@ const HeroSection: React.FC = () => {
                           lineHeight: "100%",
                         }}
                       >
-                      Take Image
+                        Take Image
                       </span>
+                     <svg
+  className="w-4 h-4 inline-block"
+  fill="none"
+  stroke="currentColor"
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+>
+  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5l8 7-8 7" />
+</svg>
+
+
+
                     </div>
                   </label>
-
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
 
                   {/* "or paste your file here" text */}
                   <p 
@@ -492,10 +604,11 @@ const HeroSection: React.FC = () => {
                     transform: "translateX(-50%)",
                   }}
                 >
-                  <label htmlFor="image-upload-mobile" className="cursor-pointer inline-block">
+                  <label className="cursor-pointer inline-block">
                     <div
                       role="button"
                       aria-label="Upload Image"
+                      onClick={() => setShowModal(true)}
                       className="flex items-center justify-center bg-[#5D2A8B] text-white transition-all duration-300 ease-in-out"
                       style={{
                         width: "130px",
@@ -507,19 +620,13 @@ const HeroSection: React.FC = () => {
                         fontWeight: 600,
                         fontSize: "12px",
                         lineHeight: "100%",
+                        gap: "6px",
                       }}
                     >
-                      Take Image
+                      <span>Take Image</span>
+                      <span style={{ fontSize: "14px" }}>›</span>
                     </div>
                   </label>
-
-                  <input
-                    id="image-upload-mobile"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
                 </div>
               </>
             )}

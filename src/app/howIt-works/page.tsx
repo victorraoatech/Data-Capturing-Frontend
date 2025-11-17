@@ -10,9 +10,15 @@ const Page = () => {
     <div>
      <Navbar/>
      <HeroSection/>
-     <SimpleSteps/>
-     <AIFeaturesSection/>
-     <ReadyToCapture/>
+     <div style={{marginTop: "200px", marginBottom: "200px"}}>
+      <SimpleSteps/>
+     </div>
+     
+     <div style={{marginTop: "200px", marginBottom: "200px"}}>
+      <AIFeaturesSection />
+     </div>
+     
+     {/* <ReadyToCapture/> */}
      <Footer/>
     </div>
   );

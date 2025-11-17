@@ -47,9 +47,14 @@ const Page = () => {
       
       <Navbar/>
       <AboutPage/>
-      <GoalsSection/>
-      <ValueSection/>
-      <ReadyToCapture/>
+      <div style={{marginBottom: "200px",marginTop: "200px"}}>
+        <GoalsSection/>
+      </div>
+       <div style={{marginBottom: "200px",marginTop: "200px"}}>
+        <ValueSection/>
+        </div>
+      
+      {/* <ReadyToCapture/> */}
       <Footer/>
     </div>
   );

@@ -39,82 +39,129 @@
 
 //   return (
 //     <section
-//       className="fixed top-0 left-0 right-0 flex justify-center items-center bg-[#F5F3FF] shadow-md z-50 overflow-hidden"
-//       style={{
-//         width: "1255px",
-//         height: "236px",
-//         borderRadius: "20px",
-//         margin: "0 auto",
-//       }}
+//       className="relative"
+//       style={{ width: "1441px", height: "871px", margin: "0 auto", background: "#F4EFFA" }}
 //     >
-//       <div className="w-full flex justify-between items-center px-8">
-//         {/* Left Text Section */}
-//         <div
-//           className="flex flex-col justify-center"
+//       <div
+//         className="absolute"
+//         style={{
+//           width: "602px",
+//           height: "156px",
+//           top: "100px",
+//           left: "50%",
+//           transform: "translateX(-50%)",
+//           display: "flex",
+//           flexDirection: "column",
+//           alignItems: "center",
+//           gap: "16px",
+//         }}
+//       >
+//         <h2
 //           style={{
-//             width: "605px",
+//             width: "602px",
 //             height: "86px",
-//             gap: "16px",
+//             fontFamily: "Monument Extended, sans-serif",
+//             fontWeight: 400,
+//             fontStyle: "normal",
+//             fontSize: "36px",
+//             lineHeight: "100%",
+//             letterSpacing: "0%",
+//             textAlign: "center",
+//             textWrap: "balance",
+//             color: "#1A1A1A",
 //           }}
 //         >
-//           <h2
-//             style={{
-//               fontFamily: "Monument Extended, sans-serif",
-//               fontSize: "28px",
-//               lineHeight: "120%",
-//               color: "#000",
-//             }}
-//           >
-//             How data capturing works in the real world
-//           </h2>
-//           <p
-//             style={{
-//               fontFamily: "Manrope, sans-serif",
-//               fontSize: "16px",
-//               lineHeight: "150%",
-//               color: "#666",
-//             }}
-//           >
-//             Designed for versatility — empowering individuals and professionals across industries.
-//           </p>
-//         </div>
-
-//         {/* Upload Image Button */}
-//         <button
+//           How data capturing works in the real world
+//         </h2>
+//         <p
 //           style={{
-//             width: "154.3px",
-//             height: "41.8px",
-//             backgroundColor: "#5D2A8B",
-//             color: "#fff",
-//             borderRadius: "29.84px",
-//             padding: "9.95px 18.65px",
+//             width: "602px",
+//             height: "54px",
 //             fontFamily: "Manrope, sans-serif",
-//             fontSize: "16px",
-//             fontWeight: 600,
-//             cursor: "pointer",
-//             transition: "all 0.3s ease",
+//             fontWeight: 400,
+//             fontStyle: "normal",
+//             fontSize: "20px",
+//             lineHeight: "100%",
+//             letterSpacing: "0%",
+//             textAlign: "center",
+//             color: "#6E6E6EB2",
+//             margin: 0,
 //           }}
-//           className="hover:bg-[#4B1E6E]"
 //         >
-//           Upload Image
-//         </button>
+//           Designed for versatility — empowering individuals and professionals across industries to measure smarter.
+//         </p>
+//       </div>
 
-//         {/* Right Image Section */}
+//       <div
+//         className="absolute"
+//         style={{ width: "1288px", height: "450px", top: "356px", left: "80px" }}
+//       >
 //         <div
-//           className="relative"
-//           style={{
-//             width: "416px",
-//             height: "236px",
-//             borderRadius: "20px",
-//             overflow: "hidden",
-//           }}
+//           className="absolute"
+//           style={{ width: "607px", height: "416px", top: "17px", left: "0px", borderRadius: "10px", overflow: "hidden", border: "7px solid #FFFFFF" }}
 //         >
 //           <Image
-//             src={activeIndex !== null ? useCases[activeIndex].image : useCases[0].image}
-//             alt="Real World Data"
+//             src={useCases[0].image}
+//             alt="Real World"
 //             fill
-//             className="object-cover transition-all duration-500"
+//             className="object-cover"
 //           />
+//         </div>
+
+//         <div
+//           className="absolute"
+//           style={{ width: "583px", height: "363px", top: "50px", left: "683px" }}
+//         >
+//           {[0, 1, 2, 3].map((idx) => {
+//             const item = useCases[idx];
+//             const open = activeIndex === idx;
+//             return (
+//               <div
+//                 key={item.id}
+//                 style={{ width: "583px", height: "81px", borderTop: "1px solid #E4D8F3", display: "flex", alignItems: "center", cursor: "pointer" }}
+//                 onClick={() => toggleAccordion(idx)}
+//               >
+//                 <div style={{ width: "28px", textAlign: "center", color: "#1A1A1A" }}>{idx + 1}</div>
+//                 <div style={{ marginLeft: "16px", flex: 1 }}>
+//                   <div
+//                     style={{
+//                       width: "341px",
+//                       height: "33px",
+//                       fontFamily: "Manrope, sans-serif",
+//                       fontWeight: 500,
+//                       fontStyle: "normal",
+//                       fontSize: "24px",
+//                       lineHeight: "100%",
+//                       letterSpacing: "0%",
+//                       color: "#000000",
+//                     }}
+//                   >
+//                     {item.title}
+//                   </div>
+//                   {open && (
+//                     <div
+//                       style={{
+//                         marginTop: "6px",
+//                         fontFamily: "Manrope, sans-serif",
+//                         fontWeight: 300,
+//                         fontStyle: "normal",
+//                         fontSize: "16px",
+//                         lineHeight: "100%",
+//                         letterSpacing: "0%",
+//                         color: "#666666B2",
+//                       }}
+//                     >
+//                       {item.description}
+//                     </div>
+//                   )}
+//                 </div>
+//                 <div style={{ width: "24px", height: "24px", position: "relative" }}>
+//                   <div style={{ position: "absolute", top: "11px", left: 0, right: 0, borderTop: "2.2px solid #000000" }} />
+//                   {!open && <div style={{ position: "absolute", left: "11px", top: 0, bottom: 0, borderLeft: "2.2px solid #000000" }} />}
+//                 </div>
+//               </div>
+//             );
+//           })}
 //         </div>
 //       </div>
 //     </section>
@@ -122,6 +169,7 @@
 // };
 
 // export default DataCapturingRealWorld;
+
 
 
 "use client";
@@ -164,108 +212,150 @@ const DataCapturingRealWorld = () => {
 
   return (
     <section
-      aria-label="Data capturing strip"
-      // fixed and centered using left:50% + translateX(-50%)
-      style={{
-        position: "fixed",
-        left: "50%",
-        top: "50%",               // vertically center; change to "24px" if you want it near top
-        transform: "translate(-50%, -50%)",
-        width: "min(1255px, 95%)", // caps at 1255px, shrinks to 95% of viewport if smaller
-        height: "236px",
-        borderRadius: "20px",
-        background: "#F5F3FF",
-        boxShadow: "0 6px 24px rgba(0,0,0,0.08)",
-        zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        paddingLeft: "18px",
-        paddingRight: "18px",
-      }}
+      className="relative"
+      style={{ width: "1441px", height: "871px", margin: "0 auto", background: "#F4EFFA" }}
     >
-      <div className="w-full flex items-center justify-between" style={{ gap: "16px" }}>
-        {/* Left Text Section */}
-        <div
-          className="flex flex-col justify-center"
+      <div
+        className="absolute"
+        style={{
+          width: "602px",
+          height: "156px",
+          top: "100px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "16px",
+        }}
+      >
+        <h2
           style={{
-            width: "605px",
-            maxWidth: "48%", // allow shrink on smaller widths
+            width: "602px",
             height: "86px",
-            gap: "8px",
+            fontFamily: "Monument Extended, sans-serif",
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "36px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+            textAlign: "center",
+            textWrap: "balance",
+            color: "#1A1A1A",
           }}
         >
-          <h2
-            style={{
-              fontFamily: "Monument Extended, sans-serif",
-              fontSize: "clamp(18px, 1.6vw, 28px)",
-              lineHeight: "120%",
-              color: "#000",
-              margin: 0,
-            }}
-          >
-            How data capturing works in the real world
-          </h2>
-          <p
-            style={{
-              fontFamily: "Manrope, sans-serif",
-              fontSize: "clamp(12px, 1.2vw, 16px)",
-              lineHeight: "150%",
-              color: "#666",
-              margin: 0,
-            }}
-          >
-            Designed for versatility — empowering individuals and professionals across industries.
-          </p>
+          How data capturing works in the real world
+        </h2>
+        <p
+          style={{
+            width: "602px",
+            height: "54px",
+            fontFamily: "Manrope, sans-serif",
+            fontWeight: 400,
+            fontStyle: "normal",
+            fontSize: "20px",
+            lineHeight: "100%",
+            letterSpacing: "0%",
+            textAlign: "center",
+            color: "#6E6E6EB2",
+            margin: 0,
+          }}
+        >
+          Designed for versatility — empowering individuals and professionals across industries to measure smarter.
+        </p>
+      </div>
+
+      <div
+        className="absolute"
+        style={{ width: "1288px", height: "450px", top: "356px", left: "80px" }}
+      >
+        <div
+          className="absolute"
+          style={{ width: "607px", height: "416px", top: "17px", left: "0px", borderRadius: "10px", overflow: "hidden", border: "7px solid #FFFFFF" }}
+        >
+          <Image
+            src={useCases[0].image}
+            alt="Real World"
+            fill
+            className="object-cover"
+          />
         </div>
 
-        {/* Center area: optional accordion summary or controls (you can keep or remove) */}
-        <div style={{ flex: "1 1 360px", display: "flex", justifyContent: "center" }}>
-          {/* You can place a compact accordion indicator or short text here if desired */}
-        </div>
-
-        {/* Upload Image Button */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <button
-            style={{
-              width: "154.3px",
-              height: "41.8px",
-              backgroundColor: "#5D2A8B",
-              color: "#fff",
-              borderRadius: "29.84px",
-              padding: "9.95px 18.65px",
-              fontFamily: "Manrope, sans-serif",
-              fontSize: "16px",
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-              border: "none",
-            }}
-            className="hover:bg-[#4B1E6E]"
-          >
-            Upload Image
-          </button>
-
-          {/* Right Image Thumbnail (keeps fixed size but responsive) */}
-          <div
-            className="relative"
-            style={{
-              width: "160px",
-              height: "100%",
-              maxHeight: "160px",
-              borderRadius: "12px",
-              overflow: "hidden",
-              flexShrink: 0,
-            }}
-          >
-            <Image
-              src={activeIndex !== null ? useCases[activeIndex].image : useCases[0].image}
-              alt="Real World Data"
-              fill
-              className="object-cover"
-              sizes="160px"
-            />
-          </div>
+        <div
+          className="absolute"
+          style={{ width: "583px", height: "363px", top: "50px", left: "683px" }}
+        >
+          {[0, 1, 2, 3].map((idx) => {
+            const item = useCases[idx];
+            const open = activeIndex === idx;
+            return (
+              <div
+                key={item.id}
+                style={{ 
+                  width: "583px", 
+                  height: open ? "auto" : "81px", 
+                  borderTop: "1px solid #E4D8F3", 
+                  display: "flex", 
+                  alignItems: "flex-start", // Change from center to flex-start
+                  cursor: "pointer",
+                  padding: "20px 0", // Add padding for better spacing
+                }}
+                onClick={() => toggleAccordion(idx)}
+              >
+                <div 
+                  style={{ 
+                    width: "28px", 
+                    color: "#1A1A1A",
+                    fontFamily: "Manrope, sans-serif",
+                    fontWeight: 500,
+                    fontSize: "16px",
+                    lineHeight: "24px", // Match the title line height
+                    paddingTop: "4px", // Align with first line of text
+                  }}
+                >
+                  {idx + 1}
+                </div>
+                <div style={{ marginLeft: "16px", flex: 1 }}>
+                  <div
+                    style={{
+                      width: "341px",
+                      height: "auto",
+                      fontFamily: "Manrope, sans-serif",
+                      fontWeight: 500,
+                      fontStyle: "normal",
+                      fontSize: "24px",
+                      lineHeight: "100%",
+                      letterSpacing: "0%",
+                      color: "#000000",
+                      marginBottom: open ? "8px" : "0",
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                  {open && (
+                    <div
+                      style={{
+                        fontFamily: "Manrope, sans-serif",
+                        fontWeight: 300,
+                        fontStyle: "normal",
+                        fontSize: "16px",
+                        lineHeight: "140%",
+                        letterSpacing: "0%",
+                        color: "#666666B2",
+                        width: "100%",
+                      }}
+                    >
+                      {item.description}
+                    </div>
+                  )}
+                </div>
+                <div style={{ width: "24px", height: "24px", position: "relative", marginTop: "4px" }}>
+                  <div style={{ position: "absolute", top: "11px", left: 0, right: 0, borderTop: "2.2px solid #000000" }} />
+                  {!open && <div style={{ position: "absolute", left: "11px", top: 0, bottom: 0, borderLeft: "2.2px solid #000000" }} />}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -720,9 +720,9 @@ const Page = () => {
             </div>
 
             {/* Content */}
-            <div className="px-6 pb-6 mt-2 text-[#1A1A1A]">
+            <div className="px-6 pb-6 mt-2 text-[#1A1A1A] " style={{width:"320px", height: "104px", top: "320px", gap:"18px"}}>
               <h3
-                className="mb-3"
+                className="mt-6"
                 style={{
                   fontFamily: "Manrope",
                   fontWeight: 600,
@@ -747,11 +747,19 @@ const Page = () => {
           </div>
 
           {/* Card 2 - AI analysis */}
-          <div
+          {/* <div
             className="bg-[#5D2A8B] rounded-[15px] relative flex-shrink-0"
             style={{
               width: "364px",
               height: "550px",
+            }}
+          > */}
+             <div
+            className="rounded-[20px] border-2 border-dashed border-[#E0D0F0] relative"
+            style={{
+              background: "#f4effa",
+              width: "413px",
+              height: "492px",
             }}
           >
             {/* Step Badge */}
