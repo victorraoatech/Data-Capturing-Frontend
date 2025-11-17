@@ -7,7 +7,8 @@ import Footer from "@/app/Home/footer/page";
 import HeroBanner from "./herobanner/page";
 import Measurement from "./measure/page";
 import KeyFeatures from "./key-features/page";
-import ReadyToCapture from "@/app/Home/capture/page";
+
+import DataCapturingRealWorld from "./data-capture/page";
 const Page = () => {
   return (
     <div>
@@ -15,9 +16,14 @@ const Page = () => {
       <Navbar />
       <HeroBanner />
       <Measurement/>
-      <KeyFeatures/>
+       <div style={{ marginTop: "200px" ,marginBottom:"200px"}}>
+          <KeyFeatures/>
+        </div>
+     
+        <div style={{ marginTop: "200px" ,marginBottom:"200px"}}>
+          <DataCapturingRealWorld/>
+        </div>
       
-      <ReadyToCapture/>
       <Footer />
     </div>
   );

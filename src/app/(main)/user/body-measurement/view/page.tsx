@@ -211,14 +211,111 @@
 //   );
 // }
 
-import React from 'react'
+"use client";
 
-const page = () => {
+import React from "react";
+import Image from "next/image";
+
+const ViewBodyMeasurementPage = () => {
+  const measurement = {
+    formId: "OUK001-205",
+    name: "Emmanuel",
+    method: "Manual",
+    type: "Body",
+    summary: [
+      {
+        section: "Head Section",
+        metrics: [
+          { label: "Round size", value: "20cm" },
+          { label: "Depth size", value: "20cm" },
+          { label: "Depth size", value: "20cm" },
+        ],
+      },
+      {
+        section: "Chest Section",
+        metrics: [
+          { label: "Round size", value: "30cm" },
+          { label: "Depth size", value: "30cm" },
+          { label: "Depth size", value: "30cm" },
+        ],
+      },
+    ],
+    images: [
+      { src: "/user.png", name: "Emmanuel.jpg" },
+      { src: "/user.png", name: "Emmanuel.jpg" },
+      { src: "/user.png", name: "Emmanuel.jpg" },
+    ],
+  };
+
   return (
-    <div>
-      page
-    </div>
-  )
-}
+    <div className="min-h-screen bg-white p-0">
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+        .manrope { font-family: 'Manrope', sans-serif; }
+      `}</style>
 
-export default page
+      <div className="max-w-5xl mx-auto">
+        <div className="mt-10 bg-white rounded-2xl border" style={{ boxShadow: "0px 2px 8px 0px #5D2A8B1A", borderColor: "#E4D8F3" }}>
+          <div className="flex items-start justify-between p-6">
+            <div>
+              <h2 className="manrope" style={{ fontSize: "22px", fontWeight: 600, color: "#1A1A1A" }}>View Measurement</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="manrope" style={{ fontSize: "12px", color: "#6E6E6EB2" }}>FORM ID:</span>
+              <span className="manrope" style={{ fontSize: "12px", color: "#1A1A1A", background: "#F4EFFA", borderRadius: "8px", padding: "6px 10px", border: "1px solid #E4D8F3" }}>{measurement.formId}</span>
+            </div>
+          </div>
+
+          <div className="px-6 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="manrope" style={{ width: "140px", color: "#6E6E6EB2", fontSize: "14px" }}>Name:</span>
+                  <span className="manrope" style={{ color: "#1A1A1A", fontSize: "14px", fontWeight: 600 }}>{measurement.name}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="manrope" style={{ width: "140px", color: "#6E6E6EB2", fontSize: "14px" }}>Method:</span>
+                  <span className="manrope" style={{ color: "#5D2A8B", fontSize: "12px", background: "#F4EFFA", borderRadius: "8px", padding: "6px 10px", border: "1px solid #E4D8F3" }}>{measurement.method}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="manrope" style={{ width: "140px", color: "#6E6E6EB2", fontSize: "14px" }}>Measurement Type:</span>
+                  <span className="manrope" style={{ color: "#1A1A1A", fontSize: "12px", background: "#FBF8EF", borderRadius: "8px", padding: "6px 10px", border: "1px solid #E4D8F3" }}>{measurement.type}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="manrope" style={{ fontSize: "14px", fontWeight: 600, color: "#1A1A1A", marginBottom: "12px" }}>Measurement Summary:</h3>
+              <div className="flex flex-col gap-3">
+                {measurement.summary.map((s, i) => (
+                  <div key={i} className="flex flex-wrap items-center gap-2">
+                    <span className="manrope" style={{ fontSize: "12px", color: "#6E6E6EB2", marginRight: "8px" }}>{s.section}</span>
+                    {s.metrics.map((m, j) => (
+                      <span key={j} className="manrope" style={{ fontSize: "12px", color: "#1A1A1A", background: "#F7F7F8", borderRadius: "14px", padding: "8px 12px", border: "1px solid #E4D8F3" }}>{m.label}. {m.value}</span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="manrope" style={{ fontSize: "14px", fontWeight: 600, color: "#1A1A1A", marginBottom: "12px" }}>Image Uploads:</h3>
+              <div className="flex flex-wrap gap-10">
+                {measurement.images.map((img, idx) => (
+                  <div key={idx} className="flex flex-col items-center gap-2">
+                    <div className="relative" style={{ width: "72px", height: "72px", borderRadius: "12px", overflow: "hidden", border: "1px solid #E4D8F3" }}>
+                      <Image src={img.src} alt={img.name} fill sizes="72px" className="object-cover" />
+                    </div>
+                    <span className="manrope" style={{ fontSize: "12px", color: "#6E6E6E" }}>{img.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ViewBodyMeasurementPage

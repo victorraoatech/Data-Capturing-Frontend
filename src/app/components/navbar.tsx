@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 export default function Navbar() {
   const pathname = usePathname()
   const [isSignUpDropdownOpen, setIsSignUpDropdownOpen] = useState(false)
-  const [isScrolledPastHero, setIsScrolledPastHero] = useState(false)
+  const [navbarBackground, setNavbarBackground] = useState<string>("#F4EFFA")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const shouldShowLinks = !pathname?.startsWith("/auth")
@@ -19,21 +19,66 @@ export default function Navbar() {
   ]
 
   useEffect(() => {
-    const handleScroll = () => {
+    const computeBackground = () => {
+      if (pathname === "/feature") {
+        const featureHero = document.getElementById("feature-hero")
+        if (featureHero) {
+          const bottom = featureHero.getBoundingClientRect().bottom
+          setNavbarBackground(
+            bottom <= 110
+              ? "#FFFFFF"
+              : "linear-gradient(180deg, #F4EFFA 0%, rgba(93, 42, 139, 0.1) 10%, #F4EFFA 100%)"
+          )
+          return
+        }
+      }
+
+      if (pathname === "/howIt-works") {
+        const howitHero = document.getElementById("howit-hero")
+        if (howitHero) {
+          const bottom = howitHero.getBoundingClientRect().bottom
+          setNavbarBackground(
+            bottom <= 110
+              ? "#FFFFFF"
+              : "linear-gradient(180deg, #F4EFFA 0%, rgba(93, 42, 139, 0.1) 10%, #F4EFFA 100%)"
+          )
+          return
+        } else {
+          setNavbarBackground("linear-gradient(180deg, #F4EFFA 0%, rgba(93, 42, 139, 0.1) 10%, #F4EFFA 100%)")
+          return
+        }
+      }
+
+      if (pathname === "/about") {
+        const aboutHero = document.getElementById("about-hero")
+        if (aboutHero) {
+          const bottom = aboutHero.getBoundingClientRect().bottom
+          setNavbarBackground(
+            bottom <= 110
+              ? "#FFFFFF"
+              : "linear-gradient(180deg, #F4EFFA 0%, rgba(93, 42, 139, 0.1) 10%, #F4EFFA 100%)"
+          )
+          return
+        } else {
+          setNavbarBackground("linear-gradient(180deg, #F4EFFA 0%, rgba(93, 42, 139, 0.1) 10%, #F4EFFA 100%)")
+          return
+        }
+      }
+
       const heroSection = document.getElementById("hero-section")
       if (heroSection) {
         const heroBottom = heroSection.getBoundingClientRect().bottom
-        setIsScrolledPastHero(heroBottom <= 110)
+        setNavbarBackground(heroBottom <= 110 ? "#FFFFFF" : "#F4EFFA")
+      } else {
+        setNavbarBackground("#F4EFFA")
       }
     }
 
-    window.addEventListener("scroll", handleScroll)
-    handleScroll()
+    window.addEventListener("scroll", computeBackground)
+    computeBackground()
 
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  const navbarBackground = isScrolledPastHero ? "#FFFFFF" : "#F4EFFA"
+    return () => window.removeEventListener("scroll", computeBackground)
+  }, [pathname])
 
   return (
     <header 
