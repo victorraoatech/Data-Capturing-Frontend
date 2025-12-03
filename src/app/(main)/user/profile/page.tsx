@@ -1,11 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useProfile } from '@/api/hooks/useProfile';
 import Image from 'next/image';
+import { MessageModal } from '@/app/components/MessageModal';
 
 const ProfilePage = () => {
   const { profile, loading, error } = useProfile();
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'info' as 'info' | 'success' | 'warning' | 'error'
+  });
+
+  const handleEditProfile = () => {
+    setModalState({
+      isOpen: true,
+      title: 'Feature Coming Soon',
+      message: 'Edit profile feature is currently under development. Please check back later.',
+      type: 'info'
+    });
+  };
+
+  const closeModal = () => {
+    setModalState({ ...modalState, isOpen: false });
+  };
 
   return (
     <div className="min-h-screen bg-white p-0">
@@ -13,6 +33,15 @@ const ProfilePage = () => {
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
         .manrope { font-family: 'Manrope', sans-serif; }
       `}</style>
+
+      {/* Message Modal */}
+      <MessageModal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
 
       {/* Profile Content */}
       <div 
@@ -117,7 +146,7 @@ const ProfilePage = () => {
                     fontWeight: 500,
                     cursor: 'pointer'
                   }}
-                  onClick={() => alert('Edit profile feature coming soon!')}
+                  onClick={handleEditProfile}
                 >
                   Edit Profile
                 </button>

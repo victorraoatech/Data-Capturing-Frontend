@@ -1,378 +1,452 @@
-// app/(main)/user/questionnaires/[id]/page.tsx
-"use client";
+'use client';
 
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, FileText, Calendar, Edit, Users, Mail } from "lucide-react";
+import React, { useState } from 'react';
+import { X, Plus, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 
-import Link from "next/link";
-import { Questionnaire } from "../../../../../../types";
-
-// Mock data
-const mockQuestionnaire: Questionnaire = {
-  _id: "1",
-  title: "Customer Feedback Survey",
-  description: "General customer satisfaction survey for our services to gather valuable feedback and improve our offerings.",
-  formId: "FORM-FEEDBACK-001",
-  sendToIndividual: "john.doe@example.com",
-  sendToGroup: ["customers", "subscribers", "vip-clients"],
-  sections: [
-    {
-      id: "section1",
-      name: "Personal Information",
-      fields: [
-        { id: "field1", label: "Full Name", type: "text", required: true },
-        { id: "field2", label: "Email Address", type: "email", required: true },
-        { id: "field3", label: "Phone Number", type: "text", required: false },
-      ]
-    },
-    {
-      id: "section2",
-      name: "Service Feedback",
-      fields: [
-        { id: "field4", label: "Service Rating", type: "select", required: true, options: ["1 - Poor", "2 - Fair", "3 - Good", "4 - Very Good", "5 - Excellent"] },
-        { id: "field5", label: "How did you hear about us?", type: "select", required: false, options: ["Social Media", "Friend Referral", "Advertisement", "Search Engine", "Other"] },
-        { id: "field6", label: "Additional Comments", type: "textarea", required: false },
-      ]
-    }
-  ],
-  status: "active",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-interface DetailPageProps {
-  params: {
-    id: string;
-  };
+interface Question {
+  id: string;
+  text: string;
+  type?: string;
 }
 
-export default function QuestionnaireDetailPage({ params }: DetailPageProps) {
-  const router = useRouter();
-  const { id } = params;
+interface Section {
+  id: string;
+  name: string;
+  questions: Question[];
+}
 
-  const { data: questionnaire, isLoading } = useQuery({
-    queryKey: ["questionnaire", id],
-    queryFn: async () => {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      return mockQuestionnaire;
-    },
+interface CreateQuestionnaireModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (data: QuestionnaireData) => void;
+}
+
+interface QuestionnaireData {
+  title: string;
+  description: string;
+  sendTo: string;
+  sections: Section[];
+}
+
+export const CreateQuestionnaireModal: React.FC<CreateQuestionnaireModalProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+}) => {
+  const [formData, setFormData] = useState<QuestionnaireData>({
+    title: '',
+    description: '',
+    sendTo: '',
+    sections: [
+      {
+        id: '1',
+        name: 'SECTION 1',
+        questions: [
+          { id: '1', text: '', type: '' },
+          { id: '2', text: '', type: '' },
+          { id: '3', text: '', type: '' },
+          { id: '4', text: '', type: '' },
+        ],
+      },
+    ],
   });
 
-  if (isLoading) {
-    return (
-      <div className="w-full min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#EAAB40] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading questionnaire details...</p>
-        </div>
-      </div>
-    );
-  }
+  const [activeDropdown, setActiveDropdown] = useState<{sectionId: string, questionId: string} | null>(null);
 
-  if (!questionnaire) {
-    return (
-      <div className="w-full min-h-screen bg-gray-50 p-4 flex items-center justify-center">
-        <div className="text-center text-red-600">
-          <p>Questionnaire not found.</p>
-          <button 
-            onClick={() => router.push("/user/questionnaires")}
-            className="mt-4 bg-[#EAAB40] text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors"
+  if (!isOpen) return null;
+
+  const handleAddQuestion = (sectionId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.map(section => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            questions: [
+              ...section.questions,
+              { id: Date.now().toString(), text: '', type: '' },
+            ],
+          };
+        }
+        return section;
+      }),
+    }));
+  };
+
+  const handleAddSection = () => {
+    const newSectionId = Date.now().toString();
+    setFormData(prev => ({
+      ...prev,
+      sections: [
+        ...prev.sections,
+        {
+          id: newSectionId,
+          name: `SECTION ${prev.sections.length + 1}`,
+          questions: [{ id: '1', text: '', type: '' }],
+        },
+      ],
+    }));
+  };
+
+  const handleRemoveSection = (sectionId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.filter(s => s.id !== sectionId),
+    }));
+  };
+
+  const handleUpdateQuestion = (
+    sectionId: string,
+    questionId: string,
+    text: string
+  ) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.map(section => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            questions: section.questions.map(q =>
+              q.id === questionId ? { ...q, text } : q
+            ),
+          };
+        }
+        return section;
+      }),
+    }));
+  };
+
+  const handleUpdateQuestionType = (
+    sectionId: string,
+    questionId: string,
+    type: string
+  ) => {
+    setFormData(prev => ({
+      ...prev,
+      sections: prev.sections.map(section => {
+        if (section.id === sectionId) {
+          return {
+            ...section,
+            questions: section.questions.map(q =>
+              q.id === questionId ? { ...q, type } : q
+            ),
+          };
+        }
+        return section;
+      }),
+    }));
+    setActiveDropdown(null);
+  };
+
+  const handleDraft = () => {
+    console.log('Draft saved:', formData);
+  };
+
+  const handleSave = () => {
+    if (onSubmit) {
+      onSubmit(formData);
+    }
+    onClose();
+  };
+
+  const toggleDropdown = (sectionId: string, questionId: string) => {
+    if (activeDropdown && activeDropdown.sectionId === sectionId && activeDropdown.questionId === questionId) {
+      setActiveDropdown(null);
+    } else {
+      setActiveDropdown({ sectionId, questionId });
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 overflow-y-auto py-8">
+      <div
+        className="bg-white rounded-[12px] shadow-2xl relative"
+        style={{
+          width: '540px',
+          minHeight: '600px',
+        }}
+      >
+        <style jsx>{`
+          @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+          .manrope { font-family: 'Manrope', sans-serif; }
+        `}</style>
+
+        {/* Modal Header */}
+        <div
+          className="flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white rounded-t-[12px]"
+          style={{ paddingLeft: '24px', paddingRight: '24px' }}
+        >
+          <h2
+            className="manrope text-lg font-semibold text-gray-900"
+            style={{
+              fontSize: '16px',
+              fontWeight: 600,
+              color: '#1A1A1A'
+            }}
           >
-            Back to Questionnaires
+            Create Questionnaire
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 bg-[#FBFAFC] rounded-[40px]"
+            style={{ width: '50px', height: '50px' }}
+          >
+            <X className="w-5 h-5 mx-auto" />
+          </button>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6 space-y-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)', paddingLeft: '24px', paddingRight: '24px' }}>
+
+          {/* Form ID */}
+          <div className="flex justify-end">
+            <span className="manrope text-xs text-gray-500">Form ID:</span>
+            <span 
+              className="manrope text-xs font-medium text-gray-900 ml-2 border border-[#6E6E6E4D] rounded-[5px] px-3 py-1"
+              style={{ 
+                width: '108px', 
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              OLG501-203
+            </span>
+          </div>
+
+          {/* Title */}
+          <div>
+            <label className="manrope block text-sm font-medium text-gray-900 mb-2">
+              Title
+            </label>
+            <input
+              type="text"
+              placeholder="Name of Questionnaire"
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              className="manrope w-full px-3 py-2 border border-gray-300 rounded-[8px] focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+              style={{ height: '40px' }}
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="manrope block text-sm font-medium text-gray-900 mb-2">
+              Description
+            </label>
+            <input
+              type="text"
+              placeholder="Description"
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              className="manrope w-full px-3 py-2 border border-gray-300 rounded-[8px] focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+              style={{ height: '40px' }}
+            />
+          </div>
+
+          {/* Send To */}
+          <div 
+            className="space-y-4"
+            style={{ width: '345px', height: '95px' }}
+          >
+            <label className="manrope block text-sm font-medium text-gray-900 mb-2">
+              Send To
+            </label>
+            <select
+              value={formData.sendTo}
+              onChange={(e) =>
+                setFormData({ ...formData, sendTo: e.target.value })
+              }
+              className="manrope w-full px-3 py-2 border border-gray-300 rounded-[8px] focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm bg-white"
+              style={{ height: '40px' }}
+            >
+              <option value="">Individuals</option>
+              <option value="group">Group</option>
+              <option value="all">All</option>
+            </select>
+          </div>
+
+          {/* Sections and Questions */}
+          <div 
+            className="space-y-6 p-4 bg-[#FBFAFC] rounded-[8px]"
+            style={{ width: '801px', height: '405px' }}
+          >
+            {formData.sections.map((section) => (
+              <div key={section.id} className="space-y-4">
+                {/* Section Header */}
+                <div className="flex items-center justify-between">
+                  <h3
+                    className="manrope text-xs font-semibold text-gray-900"
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      color: '#1A1A1A',
+                      letterSpacing: '0.5px'
+                    }}
+                  >
+                    {section.name}
+                  </h3>
+                  {formData.sections.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveSection(section.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Questions Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  {section.questions.map((question, questionIndex) => (
+                    <div key={question.id} className="relative">
+                      <label className="manrope block text-xs font-medium text-gray-700 mb-1.5">
+                        Question {questionIndex + 1}
+                      </label>
+                      <div className="relative flex items-center gap-2">
+                        <input
+                          type="text"
+                          placeholder={`Question ${questionIndex + 1}`}
+                          value={question.text}
+                          onChange={(e) =>
+                            handleUpdateQuestion(
+                              section.id,
+                              question.id,
+                              e.target.value
+                            )
+                          }
+                          className="manrope w-full px-3 py-2 border border-gray-300 rounded-[8px] focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          style={{ height: '40px' }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => toggleDropdown(section.id, question.id)}
+                          className="flex-shrink-0"
+                        >
+                          <Image 
+                            src="/delete.png" 
+                            alt="Question type" 
+                            width={24} 
+                            height={24}
+                          />
+                        </button>
+                        
+                        {/* Dropdown for question type */}
+                        {activeDropdown && 
+                         activeDropdown.sectionId === section.id && 
+                         activeDropdown.questionId === question.id && (
+                          <div 
+                            className="absolute right-0 top-full mt-1 z-10 bg-white rounded-[20px] shadow-lg border border-gray-200"
+                            style={{
+                              width: '108px',
+                              padding: '28px 11px',
+                              boxShadow: '0px 2px 8px 0px #5D2A8B1A'
+                            }}
+                          >
+                            <div className="flex flex-col gap-3">
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateQuestionType(section.id, question.id, 'paragraph')}
+                                className="manrope text-xs text-gray-700 hover:text-purple-600 text-center"
+                              >
+                                Paragraph
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateQuestionType(section.id, question.id, 'dropdown')}
+                                className="manrope text-xs text-gray-700 hover:text-purple-600 text-center"
+                              >
+                                Dropdown
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateQuestionType(section.id, question.id, 'multiselect')}
+                                className="manrope text-xs text-gray-700 hover:text-purple-600 text-center"
+                              >
+                                Multiselect
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add New Field Button */}
+                <button
+                  type="button"
+                  onClick={() => handleAddQuestion(section.id)}
+                  className="manrope text-purple-600 text-lg font-medium flex items-center gap-3 hover:text-purple-700 mt-2"
+                  style={{
+                    width: '149px',
+                    height: '25px'
+                  }}
+                >
+                  <Plus className="w-5 h-5" />
+                  <span className="text-[18px]">Add New Field</span>
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Add New Section Button */}
+          <button
+            type="button"
+            onClick={handleAddSection}
+            className="manrope text-purple-600 text-xs font-medium flex items-center gap-1.5 hover:text-purple-700"
+          >
+            <Plus className="w-4 h-4" />
+            Add New Section
+          </button>
+        </div>
+
+        {/* Modal Footer */}
+        <div
+          className="flex justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50/50 sticky bottom-0 rounded-b-[12px]"
+          style={{ paddingLeft: '24px', paddingRight: '24px' }}
+        >
+          <button
+            type="button"
+            onClick={handleDraft}
+            className="manrope px-6 py-2 text-gray-700 border border-gray-300 rounded-full hover:bg-gray-50 transition-colors font-medium text-sm"
+            style={{
+              borderRadius: '24px',
+              borderColor: '#CCCCCC'
+            }}
+          >
+            Draft
+          </button>
+          <button
+            type="button"
+            onClick={handleSave}
+            className="manrope px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors font-medium text-sm"
+            style={{
+              borderRadius: '24px',
+              backgroundColor: '#5D2A8B'
+            }}
+          >
+            Save
           </button>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+};
 
-  const totalFields = questionnaire.sections.reduce((total, section) => total + section.fields.length, 0);
-
+// Default export for Next.js page requirement
+export default function CreateQuestionnairePage() {
   return (
-    <div className="w-full min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={() => router.push("/user/questionnaires")}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Questionnaires
-            </button>
-            
-            <Link
-              href={`/user/questionnaires/create?edit=${questionnaire._id}`}
-              className="flex items-center gap-2 bg-[#EAAB40] text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition-colors"
-            >
-              <Edit className="w-4 h-4" />
-              Edit
-            </Link>
-          </div>
-          
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-[#EAAB40] bg-opacity-10 rounded-lg">
-                  <FileText className="w-8 h-8 text-[#EAAB40]" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">
-                    {questionnaire.title}
-                  </h1>
-                  <p className="text-gray-600 mt-2 text-lg">{questionnaire.description}</p>
-                  <div className="flex items-center gap-4 mt-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      questionnaire.status === 'active' 
-                        ? 'bg-green-100 text-green-800 border border-green-200'
-                        : questionnaire.status === 'draft'
-                        ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-                        : 'bg-gray-100 text-gray-800 border border-gray-200'
-                    }`}>
-                      {questionnaire.status.charAt(0).toUpperCase() + questionnaire.status.slice(1)}
-                    </span>
-                    <div className="flex items-center gap-1 text-gray-500 text-sm">
-                      <Calendar className="w-4 h-4" />
-                      Created {new Date(questionnaire.createdAt).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-          {/* Main Content - 3/4 width */}
-          <div className="xl:col-span-3 space-y-8">
-            {/* Questionnaire Overview */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200">
-                Questionnaire Overview
-              </h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-100">
-                  <div className="text-2xl font-bold text-blue-900">{questionnaire.sections.length}</div>
-                  <div className="text-sm font-medium text-blue-700">Sections</div>
-                </div>
-                <div className="text-center p-4 bg-green-50 rounded-lg border border-green-100">
-                  <div className="text-2xl font-bold text-green-900">{totalFields}</div>
-                  <div className="text-sm font-medium text-green-700">Total Fields</div>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-100">
-                  <div className="text-2xl font-bold text-purple-900">
-                    {questionnaire.sections.reduce((count, section) => 
-                      count + section.fields.filter(field => field.required).length, 0
-                    )}
-                  </div>
-                  <div className="text-sm font-medium text-purple-700">Required Fields</div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Form ID
-                  </label>
-                  <p className="text-gray-900 text-lg font-mono font-semibold">{questionnaire.formId}</p>
-                </div>
-                
-                <div className="space-y-1">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Last Updated
-                  </label>
-                  <p className="text-gray-900 text-lg">
-                    {new Date(questionnaire.updatedAt).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Sections */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-6 pb-3 border-b border-gray-200">
-                Questionnaire Sections
-              </h3>
-              
-              <div className="space-y-6">
-                {questionnaire.sections.map((section, sectionIndex) => (
-                  <div key={section.id} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-3">
-                      <span className="flex items-center justify-center w-6 h-6 bg-[#EAAB40] text-white rounded-full text-sm">
-                        {sectionIndex + 1}
-                      </span>
-                      {section.name}
-                    </h4>
-
-                    {/* Fields */}
-                    <div className="space-y-4">
-                      {section.fields.map((field, fieldIndex) => (
-                        <div key={field.id} className="bg-white p-4 rounded-lg border border-gray-200">
-                          <div className="flex items-start gap-4">
-                            <span className="flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-600 rounded text-sm font-medium mt-1">
-                              {fieldIndex + 1}
-                            </span>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <span className="text-lg font-medium text-gray-900">
-                                  {field.label}
-                                </span>
-                                {field.required && (
-                                  <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded">
-                                    Required
-                                  </span>
-                                )}
-                                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded capitalize">
-                                  {field.type}
-                                </span>
-                              </div>
-                              
-                              {field.type === 'select' && field.options && (
-                                <div className="mt-2">
-                                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Options:
-                                  </label>
-                                  <div className="flex flex-wrap gap-2">
-                                    {field.options.map((option, optionIndex) => (
-                                      <span
-                                        key={optionIndex}
-                                        className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full border border-green-200"
-                                      >
-                                        {option}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Sidebar - 1/4 width */}
-          <div className="space-y-8">
-            {/* Recipients */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#EAAB40]" />
-                Recipients
-              </h3>
-              
-              <div className="space-y-4">
-                {questionnaire.sendToIndividual && (
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-100">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium text-blue-700">Individual</span>
-                    </div>
-                    <span className="text-sm text-blue-900 truncate max-w-[120px]">
-                      {questionnaire.sendToIndividual}
-                    </span>
-                  </div>
-                )}
-                
-                {questionnaire.sendToGroup.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Groups ({questionnaire.sendToGroup.length})
-                    </label>
-                    <div className="space-y-2">
-                      {questionnaire.sendToGroup.map((group, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-2 p-2 bg-green-50 rounded border border-green-100"
-                        >
-                          <Users className="w-4 h-4 text-green-600" />
-                          <span className="text-sm text-green-800 capitalize">{group}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                Quick Actions
-              </h3>
-              
-              <div className="space-y-3">
-                <Link
-                  href={`/user/questionnaires/create?edit=${questionnaire._id}`}
-                  className="w-full flex items-center justify-center gap-2 bg-[#EAAB40] text-white px-4 py-3 rounded-lg hover:bg-orange-500 transition-colors font-medium"
-                >
-                  <Edit className="w-4 h-4" />
-                  Edit Questionnaire
-                </Link>
-                
-                <button
-                  onClick={() => router.push("/user/questionnaires")}
-                  className="w-full flex items-center justify-center gap-2 border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back to List
-                </button>
-              </div>
-            </div>
-
-            {/* Metadata */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                Metadata
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <span className="block text-sm font-medium text-gray-700">Created Date</span>
-                    <span className="block text-sm text-gray-500">
-                      {new Date(questionnaire.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </span>
-                  </div>
-                  <Calendar className="w-5 h-5 text-gray-400" />
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <span className="block text-sm font-medium text-gray-700">Last Updated</span>
-                    <span className="block text-sm text-gray-500">
-                      {new Date(questionnaire.updatedAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </span>
-                  </div>
-                  <Calendar className="w-5 h-5 text-gray-400" />
-                </div>
-                
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <span className="block text-sm font-medium text-gray-700">Questionnaire ID</span>
-                    <span className="block text-sm text-gray-500 font-mono">{questionnaire._id}</span>
-                  </div>
-                  <FileText className="w-5 h-5 text-gray-400" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div>
+      <h1>Create Questionnaire Page</h1>
+      <p>This route is handled by the modal component.</p>
     </div>
   );
 }

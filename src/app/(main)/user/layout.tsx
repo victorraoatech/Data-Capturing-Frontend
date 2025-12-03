@@ -13,10 +13,12 @@ export default function RootLayout({
   const [showSidebar, setShowSidebar] = useState(true);
 
   return (
-    <div className="min-h-screen bg-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#F7F0FE] relative">
+      
       <UserSidebar onShow={showSidebar} setShow={setShowSidebar} />
       
-      <div className="relative w-full overflow-x-hidden">
+      
+      <div className="relative w-full">
         {children}
       </div>
     </div>

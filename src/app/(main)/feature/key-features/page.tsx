@@ -5,7 +5,7 @@ const KeyFeatures = () => {
   const features = [
     {
       id: 1,
-      title: "Image Upload Recognition",
+      title: "Capture Image Recognition",
       description:
         "Upload a single photo — our AI automatically detects shapes, edges, and proportions to deliver accurate measurements in seconds.",
       iconSrc: "/assets/Frame 248.png",
@@ -134,7 +134,7 @@ const KeyFeatures = () => {
     top: "30px",
     left: "30px",
     borderRadius: "40px",
-    position: "relative", // Important for layout="fill"
+    position: "relative", 
   }}
 >
   <Image 

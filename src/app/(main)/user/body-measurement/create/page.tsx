@@ -1,512 +1,1490 @@
 
 
+// // "use client";
+// // import { useSaveManualMeasurement } from "@/api/hooks/useManualMeasurement";
+// // import { useProfile } from "@/api/hooks/useProfile";
+// // import {
+// //   Field,
+// //   FieldArray,
+// //   Form,
+// //   Formik,
+// //   FormikErrors,
+// // } from "formik";
+// // import React, { useEffect } from "react";
+// // import { useState } from "react";
+// // import * as Yup from "yup";
+// // import { useRouter } from "next/navigation";
+// // import { Plus, Trash2, ArrowLeft, X, Upload } from "lucide-react";
+// // import { toast } from "@/app/components/hooks/use-toast";
+// // import { MeasurementTopNav } from "@/app/components/MeasurementTopNav";
+
+// // interface CustomMeasurement {
+// //   bodyPartName: string;
+// //   size: string;
+// // }
+
+// // interface BodySection {
+// //   sectionName: string;
+// //   measurements: CustomMeasurement[];
+// // }
+
+// // interface SelfMeasurementFormValues {
+// //   firstName: string;
+// //   lastName: string;
+// //   measurementType: string;
+// //   subject: string;
+// //   bodySections: BodySection[];
+// // }
+
+// // // Generate Form ID
+// // const generateFormId = () => {
+// //   const timestamp = Date.now();
+// //   const random = Math.random().toString(36).substring(2, 11);
+// //   return `CUR001-${timestamp.toString().slice(-6)}-${random.slice(0, 3).toUpperCase()}`;
+// // };
+
+// // // Type guard
+// // const isBodySectionErrors = (error: unknown): error is FormikErrors<BodySection> => {
+// //   return typeof error === 'object' && error !== null && 'sectionName' in error;
+// // };
+
+// // const validationSchema = Yup.object().shape({
+// //   firstName: Yup.string().required("First name is required"),
+// //   lastName: Yup.string().required("Last name is required"),
+// //   measurementType: Yup.string().required("Measurement type is required"),
+// //   subject: Yup.string().required("Subject is required"),
+// //   bodySections: Yup.array()
+// //     .of(
+// //       Yup.object().shape({
+// //         sectionName: Yup.string().required("Section name is required"),
+// //         measurements: Yup.array()
+// //           .of(
+// //             Yup.object().shape({
+// //               bodyPartName: Yup.string().required("Body part name is required"),
+// //               size: Yup.string().required("Size is required"),
+// //             })
+// //           )
+// //           .min(1, "At least one measurement is required"),
+// //       })
+// //     )
+// //     .min(1, "At least one section is required"),
+// // });
+
+// // const initialValues: SelfMeasurementFormValues = {
+// //   firstName: "",
+// //   lastName: "",
+// //   measurementType: "Manual",
+// //   subject: "Self",
+// //   bodySections: [
+// //     {
+// //       sectionName: "Head Section",
+// //       measurements: [
+// //         { bodyPartName: "", size: "" },
+// //       ],
+// //     },
+// //     {
+// //       sectionName: "Chest Section",
+// //       measurements: [
+// //         { bodyPartName: "", size: "" },
+// //       ],
+// //     },
+// //   ],
+// // };
+
+// // export default function SelfMeasurementForm() {
+// //   const router = useRouter();
+// //   const { profile } = useProfile();
+// //   const [isCreating, setIsCreating] = useState(false);
+// //   const [step, setStep] = useState(1);
+// //   const [formId] = useState(generateFormId());
+// //   const [frontImage, setFrontImage] = useState<File | null>(null);
+// //   const [sideImage, setSideImage] = useState<File | null>(null);
+// //   const saveMeasurementMutation = useSaveManualMeasurement();
+
+// //   const handleSubmit = async (values: SelfMeasurementFormValues) => {
+// //     setIsCreating(true);
+// //     try {
+// //       const payload = {
+// //         measurementType: values.measurementType,
+// //         subject: values.subject,
+// //         firstName: values.firstName,
+// //         lastName: values.lastName,
+// //         sections: values.bodySections.map(section => ({
+// //           sectionName: section.sectionName,
+// //           measurements: section.measurements.map(m => ({
+// //             bodyPartName: m.bodyPartName,
+// //             size: parseFloat(m.size) || m.size,
+// //           })),
+// //         })),
+// //       };
+
+// //       await saveMeasurementMutation.mutateAsync(payload);
+      
+// //       toast({
+// //         title: "Success!",
+// //         description: "Measurement saved successfully",
+// //       });
+      
+// //       router.push("/user/body-measurement");
+// //     } catch (error) {
+// //       toast({
+// //         title: "Error",
+// //         description:
+// //           error instanceof Error
+// //             ? error.message
+// //             : "Failed to save measurement",
+// //         variant: "destructive",
+// //       });
+// //     } finally {
+// //       setIsCreating(false);
+// //     }
+// //   };
+
+// //   return (
+// //     <div className="min-h-screen bg-white">
+// //       <style jsx>{`
+// //         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+// //         .manrope {
+// //           font-family: 'Manrope', sans-serif;
+// //         }
+// //       `}</style>
+      
+// //       <MeasurementTopNav />
+
+// //       <div className="pt-8 pb-16 px-4 sm:px-6 lg:px-8">
+// //         <div className="max-w-4xl mx-auto">
+// //           <div className="bg-white rounded-[20px] shadow-xl p-6">
+// //             <Formik
+// //               initialValues={initialValues}
+// //               validationSchema={validationSchema}
+// //               onSubmit={handleSubmit}
+// //               enableReinitialize
+// //             >
+// //               {({ values, errors, touched, setFieldValue }) => {
+// //                 // Auto-fill firstName and lastName when subject is "Self"
+// //                 useEffect(() => {
+// //                   if (values.subject === "Self" && profile) {
+// //                     setFieldValue("firstName", profile.firstName || "");
+// //                     setFieldValue("lastName", profile.lastName || "");
+// //                   }
+// //                 }, [values.subject, profile]);
+
+// //                 return (
+// //                   <Form>
+// //                     {/* Modal Header */}
+// //                     <div className="flex items-center justify-between p-6 border-b border-gray-200">
+// //                       <div className="flex items-center gap-3">
+// //                         <button
+// //                           type="button"
+// //                           onClick={() => step === 2 ? setStep(1) : router.back()}
+// //                           className="text-gray-600 hover:text-gray-800"
+// //                         >
+// //                           <ArrowLeft className="w-5 h-5" />
+// //                         </button>
+// //                         <div>
+// //                           <h2 className="manrope text-[22px] font-semibold text-gray-900">
+// //                             Take New Measurement
+// //                           </h2>
+// //                         </div>
+// //                       </div>
+                      
+// //                       <button
+// //                         type="button"
+// //                         onClick={() => router.back()}
+// //                         className="text-gray-400 hover:text-gray-600"
+// //                       >
+// //                         <X className="w-5 h-5" />
+// //                       </button>
+// //                     </div>
+
+// //                     {/* Step 1: Initial Setup */}
+// //                     {step === 1 && (
+// //                       <div className="p-6 space-y-6">
+// //                         {/* Form ID Display */}
+// //                         <div className="flex justify-end">
+// //                           <div className="manrope text-sm text-gray-500">
+// //                             Form ID: <span className="font-medium text-gray-700">{formId}</span>
+// //                           </div>
+// //                         </div>
+
+// //                         {/* Measurement Type and Subject */}
+// //                         <div className="grid grid-cols-2 gap-4">
+// //                           <div>
+// //                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                               Manual or AI Measurement
+// //                             </label>
+// //                             <Field
+// //                               as="select"
+// //                               name="measurementType"
+// //                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+// //                             >
+// //                               <option value="Manual">Manual</option>
+// //                               <option value="AI">AI</option>
+// //                             </Field>
+// //                           </div>
+// //                           <div>
+// //                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                               Whose Measurement
+// //                             </label>
+// //                             <Field
+// //                               as="select"
+// //                               name="subject"
+// //                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+// //                             >
+// //                               <option value="Self">Self</option>
+// //                               <option value="Other">Other</option>
+// //                             </Field>
+// //                           </div>
+// //                         </div>
+
+// //                         {/* First Name and Last Name */}
+// //                         <div className="grid grid-cols-2 gap-4">
+// //                           <div>
+// //                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                               First Name
+// //                             </label>
+// //                             <Field
+// //                               name="firstName"
+// //                               type="text"
+// //                               placeholder="First Name"
+// //                               disabled={values.subject === "Self"}
+// //                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm disabled:bg-gray-100"
+// //                             />
+// //                             {errors.firstName && touched.firstName && (
+// //                               <div className="manrope text-red-500 text-xs mt-1">
+// //                                 {errors.firstName}
+// //                               </div>
+// //                             )}
+// //                           </div>
+// //                           <div>
+// //                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                               Last Name
+// //                             </label>
+// //                             <Field
+// //                               name="lastName"
+// //                               type="text"
+// //                               placeholder="Last Name"
+// //                               disabled={values.subject === "Self"}
+// //                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm disabled:bg-gray-100"
+// //                             />
+// //                             {errors.lastName && touched.lastName && (
+// //                               <div className="manrope text-red-500 text-xs mt-1">
+// //                                 {errors.lastName}
+// //                               </div>
+// //                             )}
+// //                           </div>
+// //                         </div>
+
+// //                         {/* Image Uploads */}
+// //                         <div className="grid grid-cols-2 gap-4">
+// //                           <div>
+// //                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                               Upload Front Image
+// //                             </label>
+// //                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer">
+// //                               <input
+// //                                 type="file"
+// //                                 accept="image/*"
+// //                                 onChange={(e) => setFrontImage(e.target.files?.[0] || null)}
+// //                                 className="hidden"
+// //                                 id="front-image"
+// //                               />
+// //                               <label htmlFor="front-image" className="cursor-pointer">
+// //                                 <Upload className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+// //                                 <p className="manrope text-sm text-gray-500">
+// //                                   {frontImage ? frontImage.name : "Upload front view or paste your file here"}
+// //                                 </p>
+// //                               </label>
+// //                             </div>
+// //                           </div>
+// //                           <div>
+// //                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                               Upload Side Image
+// //                             </label>
+// //                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer">
+// //                               <input
+// //                                 type="file"
+// //                                 accept="image/*"
+// //                                 onChange={(e) => setSideImage(e.target.files?.[0] || null)}
+// //                                 className="hidden"
+// //                                 id="side-image"
+// //                               />
+// //                               <label htmlFor="side-image" className="cursor-pointer">
+// //                                 <Upload className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+// //                                 <p className="manrope text-sm text-gray-500">
+// //                                   {sideImage ? sideImage.name : "Upload side view or paste your file here"}
+// //                                 </p>
+// //                               </label>
+// //                             </div>
+// //                           </div>
+// //                         </div>
+
+// //                         {/* Next Button */}
+// //                         <div className="flex justify-end gap-3 pt-4">
+// //                           <button
+// //                             type="button"
+// //                             onClick={() => router.back()}
+// //                             className="manrope px-6 py-2 text-gray-700 border border-[#5D2A8B] rounded-full hover:bg-gray-50 transition-colors"
+// //                           >
+// //                             Cancel
+// //                           </button>
+// //                           <button
+// //                             type="button"
+// //                             onClick={() => {
+// //                               if (!values.firstName || !values.lastName) {
+// //                                 toast({
+// //                                   title: "Required Fields",
+// //                                   description: "Please fill in first name and last name",
+// //                                   variant: "destructive",
+// //                                 });
+// //                                 return;
+// //                               }
+// //                               setStep(2);
+// //                             }}
+// //                             className="manrope px-6 py-2 bg-[#5D2A8B] text-white rounded-full hover:bg-purple-700 transition-colors"
+// //                           >
+// //                             Next
+// //                           </button>
+// //                         </div>
+// //                       </div>
+// //                     )}
+
+// //                     {/* Step 2: Measurements */}
+// //                     {step === 2 && (
+// //                       <div className="p-6 space-y-8">
+// //                         <FieldArray name="bodySections">
+// //                           {({ push: pushSection, remove: removeSection }) => (
+// //                             <>
+// //                               {values.bodySections.map((section, sectionIndex) => (
+// //                                 <div key={sectionIndex} className="space-y-4 p-4 border border-gray-200 rounded-lg">
+// //                                   {/* Section Header */}
+// //                                   <div className="flex items-center justify-between">
+// //                                     <h3 className="manrope text-sm font-semibold text-gray-700 tracking-wide">
+// //                                       {section.sectionName}
+// //                                     </h3>
+// //                                     {sectionIndex > 1 && (
+// //                                       <button
+// //                                         type="button"
+// //                                         onClick={() => removeSection(sectionIndex)}
+// //                                         className="text-red-500 hover:text-red-700 text-sm"
+// //                                       >
+// //                                         <Trash2 className="w-4 h-4" />
+// //                                       </button>
+// //                                     )}
+// //                                   </div>
+
+// //                                   {/* Measurements Grid */}
+// //                                   <FieldArray name={`bodySections.${sectionIndex}.measurements`}>
+// //                                     {({ push: pushMeasurement, remove: removeMeasurement }) => (
+// //                                       <div className="space-y-4">
+// //                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+// //                                           {section.measurements.map((measurement, measurementIndex) => (
+// //                                             <React.Fragment key={measurementIndex}>
+// //                                               {/* Body Part Name */}
+// //                                               <div>
+// //                                                 <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                                                   Body Part Name
+// //                                                 </label>
+// //                                                 <div className="relative">
+// //                                                   <Field
+// //                                                     name={`bodySections.${sectionIndex}.measurements.${measurementIndex}.bodyPartName`}
+// //                                                     type="text"
+// //                                                     placeholder="e.g., Shoulder Width"
+// //                                                     className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+// //                                                   />
+// //                                                   {measurementIndex > 0 && (
+// //                                                     <button
+// //                                                       type="button"
+// //                                                       onClick={() => removeMeasurement(measurementIndex)}
+// //                                                       className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700"
+// //                                                     >
+// //                                                       <Trash2 className="w-4 h-4" />
+// //                                                     </button>
+// //                                                   )}
+// //                                                 </div>
+// //                                               </div>
+
+// //                                               {/* Size */}
+// //                                               <div>
+// //                                                 <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+// //                                                   Size (cm)
+// //                                                 </label>
+// //                                                 <Field
+// //                                                   name={`bodySections.${sectionIndex}.measurements.${measurementIndex}.size`}
+// //                                                   type="text"
+// //                                                   placeholder="e.g., 45"
+// //                                                   className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+// //                                                 />
+// //                                               </div>
+// //                                             </React.Fragment>
+// //                                           ))}
+// //                                         </div>
+
+// //                                         {/* Add New Field Button */}
+// //                                         <button
+// //                                           type="button"
+// //                                           onClick={() => pushMeasurement({ bodyPartName: "", size: "" })}
+// //                                           className="manrope text-[#5D2A8B] text-sm font-medium flex items-center gap-1 hover:text-purple-700"
+// //                                         >
+// //                                           <Plus className="w-4 h-4" />
+// //                                           Add New Field
+// //                                         </button>
+// //                                       </div>
+// //                                     )}
+// //                                   </FieldArray>
+// //                                 </div>
+// //                               ))}
+
+// //                               {/* Add New Section Button */}
+// //                               <button
+// //                                 type="button"
+// //                                 onClick={() =>
+// //                                   pushSection({
+// //                                     sectionName: `Section ${values.bodySections.length + 1}`,
+// //                                     measurements: [{ bodyPartName: "", size: "" }],
+// //                                   })
+// //                                 }
+// //                                 className="manrope text-[#5D2A8B] text-sm font-medium flex items-center gap-1 hover:text-purple-700 border border-[#5D2A8B] rounded-lg px-4 py-2"
+// //                               >
+// //                                 <Plus className="w-4 h-4" />
+// //                                 Add New Section
+// //                               </button>
+// //                             </>
+// //                           )}
+// //                         </FieldArray>
+
+// //                         {/* Save Button */}
+// //                         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+// //                           <button
+// //                             type="button"
+// //                             onClick={() => setStep(1)}
+// //                             className="manrope px-6 py-2 text-gray-700 border border-[#5D2A8B] rounded-full hover:bg-gray-50 transition-colors"
+// //                             disabled={isCreating}
+// //                           >
+// //                             Back
+// //                           </button>
+// //                           <button
+// //                             type="submit"
+// //                             disabled={isCreating}
+// //                             className={`manrope px-6 py-2 bg-[#5D2A8B] text-white rounded-full hover:bg-purple-700 transition-colors ${
+// //                               isCreating ? "opacity-50 cursor-not-allowed" : ""
+// //                             }`}
+// //                           >
+// //                             {isCreating ? (
+// //                               <div className="flex items-center gap-2">
+// //                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+// //                                 Saving...
+// //                               </div>
+// //                             ) : (
+// //                               "Save"
+// //                             )}
+// //                           </button>
+// //                         </div>
+// //                       </div>
+// //                     )}
+// //                   </Form>
+// //                 );
+// //               }}
+// //             </Formik>
+// //           </div>
+// //         </div>
+// //       </div>
+// //     </div>
+// //   );
+// // }
+
+// "use client";
+// import { useSaveManualMeasurement } from "@/api/hooks/useManualMeasurement";
+// import { useProfile } from "@/api/hooks/useProfile";
+// import {
+//   Field,
+//   FieldArray,
+//   Form,
+//   Formik,
+//   FormikErrors,
+// } from "formik";
+// import React, { useEffect } from "react";
+// import { useState } from "react";
+// import * as Yup from "yup";
+// import { useRouter } from "next/navigation";
+// import { Plus, Trash2, ArrowLeft, X, Upload } from "lucide-react";
+// import { toast } from "@/app/components/hooks/use-toast";
+// import { MeasurementTopNav } from "@/app/components/MeasurementTopNav";
+
+// interface CustomMeasurement {
+//   bodyPartName: string;
+//   size: string;
+// }
+
+// interface BodySection {
+//   sectionName: string;
+//   measurements: CustomMeasurement[];
+// }
+
+// interface SelfMeasurementFormValues {
+//   firstName: string;
+//   lastName: string;
+//   measurementType: string;
+//   subject: string;
+//   bodySections: BodySection[];
+// }
+
+// // Generate Form ID
+// const generateFormId = () => {
+//   const timestamp = Date.now();
+//   const random = Math.random().toString(36).substring(2, 11);
+//   return `CUR001-${timestamp.toString().slice(-6)}-${random.slice(0, 3).toUpperCase()}`;
+// };
+
+// // Type guard
+// const isBodySectionErrors = (error: unknown): error is FormikErrors<BodySection> => {
+//   return typeof error === 'object' && error !== null && 'sectionName' in error;
+// };
+
+// const validationSchema = Yup.object().shape({
+//   firstName: Yup.string().required("First name is required"),
+//   lastName: Yup.string().required("Last name is required"),
+//   measurementType: Yup.string().required("Measurement type is required"),
+//   subject: Yup.string().required("Subject is required"),
+//   bodySections: Yup.array()
+//     .of(
+//       Yup.object().shape({
+//         sectionName: Yup.string().required("Section name is required"),
+//         measurements: Yup.array()
+//           .of(
+//             Yup.object().shape({
+//               bodyPartName: Yup.string().required("Body part name is required"),
+//               size: Yup.string().required("Size is required"),
+//             })
+//           )
+//           .min(1, "At least one measurement is required"),
+//       })
+//     )
+//     .min(1, "At least one section is required"),
+// });
+
+// const initialValues: SelfMeasurementFormValues = {
+//   firstName: "",
+//   lastName: "",
+//   measurementType: "Manual",
+//   subject: "Self",
+//   bodySections: [
+//     {
+//       sectionName: "Head Section",
+//       measurements: [
+//         { bodyPartName: "", size: "" },
+//       ],
+//     },
+//     {
+//       sectionName: "Chest Section",
+//       measurements: [
+//         { bodyPartName: "", size: "" },
+//       ],
+//     },
+//   ],
+// };
+
+// export default function SelfMeasurementForm() {
+//   const router = useRouter();
+//   const { profile } = useProfile();
+//   const [isCreating, setIsCreating] = useState(false);
+//   const [step, setStep] = useState(1);
+//   const [formId] = useState(generateFormId());
+//   const [frontImage, setFrontImage] = useState<File | null>(null);
+//   const [sideImage, setSideImage] = useState<File | null>(null);
+//   const saveMeasurementMutation = useSaveManualMeasurement();
+
+//   const handleSubmit = async (values: SelfMeasurementFormValues) => {
+//     setIsCreating(true);
+//     try {
+//       const payload = {
+//         measurementType: values.measurementType,
+//         subject: values.subject,
+//         firstName: values.firstName,
+//         lastName: values.lastName,
+//         sections: values.bodySections.map(section => ({
+//           sectionName: section.sectionName,
+//           measurements: section.measurements.map(m => ({
+//             bodyPartName: m.bodyPartName,
+//             size: parseFloat(m.size) || m.size,
+//           })),
+//         })),
+//       };
+
+//       await saveMeasurementMutation.mutateAsync(payload);
+      
+//       toast({
+//         title: "Success!",
+//         description: "Measurement saved successfully",
+//       });
+      
+//       router.push("/user/body-measurement");
+//     } catch (error) {
+//       toast({
+//         title: "Error",
+//         description:
+//           error instanceof Error
+//             ? error.message
+//             : "Failed to save measurement",
+//         variant: "destructive",
+//       });
+//     } finally {
+//       setIsCreating(false);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-white">
+//       <style jsx>{`
+//         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+//         .manrope {
+//           font-family: 'Manrope', sans-serif;
+//         }
+//       `}</style>
+      
+//       <MeasurementTopNav />
+
+//       {/* Modal Overlay */}
+//       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+//         <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+//           <Formik
+//             initialValues={initialValues}
+//             validationSchema={validationSchema}
+//             onSubmit={handleSubmit}
+//             enableReinitialize
+//           >
+//             {({ values, errors, touched, setFieldValue }) => {
+//               // Auto-fill firstName and lastName when subject is "Self"
+//               useEffect(() => {
+//                 if (values.subject === "Self" && profile) {
+//                   setFieldValue("firstName", profile.firstName || "");
+//                   setFieldValue("lastName", profile.lastName || "");
+//                 }
+//               }, [values.subject, profile]);
+
+//               return (
+//                 <Form className="flex flex-col h-full max-h-[90vh]">
+//                   {/* Modal Header */}
+//                   <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
+//                     <div className="flex items-center gap-3">
+//                       <button
+//                         type="button"
+//                         onClick={() => step === 2 ? setStep(1) : router.back()}
+//                         className="text-gray-600 hover:text-gray-800"
+//                       >
+//                         <ArrowLeft className="w-5 h-5" />
+//                       </button>
+//                       <div>
+//                         <h2 className="manrope text-[22px] font-semibold text-gray-900">
+//                           Take New Measurement
+//                         </h2>
+//                       </div>
+//                     </div>
+                    
+//                     <button
+//                       type="button"
+//                       onClick={() => router.back()}
+//                       className="text-gray-400 hover:text-gray-600"
+//                     >
+//                       <X className="w-5 h-5" />
+//                     </button>
+//                   </div>
+
+//                   {/* Scrollable Content */}
+//                   <div className="overflow-y-auto flex-1">
+//                     {/* Step 1: Initial Setup */}
+//                     {step === 1 && (
+//                       <div className="p-6 space-y-6">
+//                         {/* Form ID Display */}
+//                         <div className="flex justify-end">
+//                           <div className="manrope text-sm text-gray-500">
+//                             Form ID: <span className="font-medium text-gray-700">{formId}</span>
+//                           </div>
+//                         </div>
+
+//                         {/* Measurement Type and Subject */}
+//                         <div className="grid grid-cols-2 gap-4">
+//                           <div>
+//                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                               Manual or AI Measurement
+//                             </label>
+//                             <Field
+//                               as="select"
+//                               name="measurementType"
+//                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+//                             >
+//                               <option value="Manual">Manual</option>
+//                               <option value="AI">AI</option>
+//                             </Field>
+//                           </div>
+//                           <div>
+//                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                               Whose Measurement
+//                             </label>
+//                             <Field
+//                               as="select"
+//                               name="subject"
+//                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+//                             >
+//                               <option value="Self">Self</option>
+//                               <option value="Other">Other</option>
+//                             </Field>
+//                           </div>
+//                         </div>
+
+//                         {/* First Name and Last Name */}
+//                         <div className="grid grid-cols-2 gap-4">
+//                           <div>
+//                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                               First Name
+//                             </label>
+//                             <Field
+//                               name="firstName"
+//                               type="text"
+//                               placeholder="First Name"
+//                               disabled={values.subject === "Self"}
+//                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm disabled:bg-gray-100"
+//                             />
+//                             {errors.firstName && touched.firstName && (
+//                               <div className="manrope text-red-500 text-xs mt-1">
+//                                 {errors.firstName}
+//                               </div>
+//                             )}
+//                           </div>
+//                           <div>
+//                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                               Last Name
+//                             </label>
+//                             <Field
+//                               name="lastName"
+//                               type="text"
+//                               placeholder="Last Name"
+//                               disabled={values.subject === "Self"}
+//                               className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm disabled:bg-gray-100"
+//                             />
+//                             {errors.lastName && touched.lastName && (
+//                               <div className="manrope text-red-500 text-xs mt-1">
+//                                 {errors.lastName}
+//                               </div>
+//                             )}
+//                           </div>
+//                         </div>
+
+//                         {/* Image Uploads */}
+//                         <div className="grid grid-cols-2 gap-4">
+//                           <div>
+//                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                               Upload Front Image
+//                             </label>
+//                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer">
+//                               <input
+//                                 type="file"
+//                                 accept="image/*"
+//                                 onChange={(e) => setFrontImage(e.target.files?.[0] || null)}
+//                                 className="hidden"
+//                                 id="front-image"
+//                               />
+//                               <label htmlFor="front-image" className="cursor-pointer">
+//                                 <Upload className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+//                                 <p className="manrope text-sm text-gray-500">
+//                                   {frontImage ? frontImage.name : "Upload front view or paste your file here"}
+//                                 </p>
+//                               </label>
+//                             </div>
+//                           </div>
+//                           <div>
+//                             <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                               Upload Side Image
+//                             </label>
+//                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer">
+//                               <input
+//                                 type="file"
+//                                 accept="image/*"
+//                                 onChange={(e) => setSideImage(e.target.files?.[0] || null)}
+//                                 className="hidden"
+//                                 id="side-image"
+//                               />
+//                               <label htmlFor="side-image" className="cursor-pointer">
+//                                 <Upload className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+//                                 <p className="manrope text-sm text-gray-500">
+//                                   {sideImage ? sideImage.name : "Upload side view or paste your file here"}
+//                                 </p>
+//                               </label>
+//                             </div>
+//                           </div>
+//                         </div>
+
+//                         {/* Next Button */}
+//                         <div className="flex justify-end gap-3 pt-4">
+//                           <button
+//                             type="button"
+//                             onClick={() => router.back()}
+//                             className="manrope px-6 py-2 text-gray-700 border border-[#5D2A8B] rounded-full hover:bg-gray-50 transition-colors"
+//                           >
+//                             Cancel
+//                           </button>
+//                           <button
+//                             type="button"
+//                             onClick={() => {
+//                               if (!values.firstName || !values.lastName) {
+//                                 toast({
+//                                   title: "Required Fields",
+//                                   description: "Please fill in first name and last name",
+//                                   variant: "destructive",
+//                                 });
+//                                 return;
+//                               }
+//                               setStep(2);
+//                             }}
+//                             className="manrope px-6 py-2 bg-[#5D2A8B] text-white rounded-full hover:bg-purple-700 transition-colors"
+//                           >
+//                             Next
+//                           </button>
+//                         </div>
+//                       </div>
+//                     )}
+
+//                     {/* Step 2: Measurements */}
+//                     {step === 2 && (
+//                       <div className="p-6 space-y-8">
+//                         <FieldArray name="bodySections">
+//                           {({ push: pushSection, remove: removeSection }) => (
+//                             <>
+//                               {values.bodySections.map((section, sectionIndex) => (
+//                                 <div key={sectionIndex} className="space-y-4 p-4 border border-gray-200 rounded-lg">
+//                                   {/* Section Header */}
+//                                   <div className="flex items-center justify-between">
+//                                     <h3 className="manrope text-sm font-semibold text-gray-700 tracking-wide">
+//                                       {section.sectionName}
+//                                     </h3>
+//                                     {sectionIndex > 1 && (
+//                                       <button
+//                                         type="button"
+//                                         onClick={() => removeSection(sectionIndex)}
+//                                         className="text-red-500 hover:text-red-700 text-sm"
+//                                       >
+//                                         <Trash2 className="w-4 h-4" />
+//                                       </button>
+//                                     )}
+//                                   </div>
+
+//                                   {/* Measurements Grid */}
+//                                   <FieldArray name={`bodySections.${sectionIndex}.measurements`}>
+//                                     {({ push: pushMeasurement, remove: removeMeasurement }) => (
+//                                       <div className="space-y-4">
+//                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+//                                           {section.measurements.map((measurement, measurementIndex) => (
+//                                             <React.Fragment key={measurementIndex}>
+//                                               {/* Body Part Name */}
+//                                               <div>
+//                                                 <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                                                   Body Part Name
+//                                                 </label>
+//                                                 <div className="relative">
+//                                                   <Field
+//                                                     name={`bodySections.${sectionIndex}.measurements.${measurementIndex}.bodyPartName`}
+//                                                     type="text"
+//                                                     placeholder="e.g., Shoulder Width"
+//                                                     className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+//                                                   />
+//                                                   {measurementIndex > 0 && (
+//                                                     <button
+//                                                       type="button"
+//                                                       onClick={() => removeMeasurement(measurementIndex)}
+//                                                       className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700"
+//                                                     >
+//                                                       <Trash2 className="w-4 h-4" />
+//                                                     </button>
+//                                                   )}
+//                                                 </div>
+//                                               </div>
+
+//                                               {/* Size */}
+//                                               <div>
+//                                                 <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+//                                                   Size (cm)
+//                                                 </label>
+//                                                 <Field
+//                                                   name={`bodySections.${sectionIndex}.measurements.${measurementIndex}.size`}
+//                                                   type="text"
+//                                                   placeholder="e.g., 45"
+//                                                   className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+//                                                 />
+//                                               </div>
+//                                             </React.Fragment>
+//                                           ))}
+//                                         </div>
+
+//                                         {/* Add New Field Button */}
+//                                         <button
+//                                           type="button"
+//                                           onClick={() => pushMeasurement({ bodyPartName: "", size: "" })}
+//                                           className="manrope text-[#5D2A8B] text-sm font-medium flex items-center gap-1 hover:text-purple-700"
+//                                         >
+//                                           <Plus className="w-4 h-4" />
+//                                           Add New Field
+//                                         </button>
+//                                       </div>
+//                                     )}
+//                                   </FieldArray>
+//                                 </div>
+//                               ))}
+
+//                               {/* Add New Section Button */}
+//                               <button
+//                                 type="button"
+//                                 onClick={() =>
+//                                   pushSection({
+//                                     sectionName: `Section ${values.bodySections.length + 1}`,
+//                                     measurements: [{ bodyPartName: "", size: "" }],
+//                                   })
+//                                 }
+//                                 className="manrope text-[#5D2A8B] text-sm font-medium flex items-center gap-1 hover:text-purple-700 border border-[#5D2A8B] rounded-lg px-4 py-2"
+//                               >
+//                                 <Plus className="w-4 h-4" />
+//                                 Add New Section
+//                               </button>
+//                             </>
+//                           )}
+//                         </FieldArray>
+//                       </div>
+//                     )}
+//                   </div>
+
+//                   {/* Footer Buttons - Fixed at bottom */}
+//                   {step === 2 && (
+//                     <div className="flex justify-end gap-3 p-6 border-t border-gray-200 flex-shrink-0">
+//                       <button
+//                         type="button"
+//                         onClick={() => setStep(1)}
+//                         className="manrope px-6 py-2 text-gray-700 border border-[#5D2A8B] rounded-full hover:bg-gray-50 transition-colors"
+//                         disabled={isCreating}
+//                       >
+//                         Back
+//                       </button>
+//                       <button
+//                         type="submit"
+//                         disabled={isCreating}
+//                         className={`manrope px-6 py-2 bg-[#5D2A8B] text-white rounded-full hover:bg-purple-700 transition-colors ${
+//                           isCreating ? "opacity-50 cursor-not-allowed" : ""
+//                         }`}
+//                       >
+//                         {isCreating ? (
+//                           <div className="flex items-center gap-2">
+//                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+//                             Saving...
+//                           </div>
+//                         ) : (
+//                           "Save"
+//                         )}
+//                       </button>
+//                     </div>
+//                   )}
+//                 </Form>
+//               );
+//             }}
+//           </Formik>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
 "use client";
-import { useAuth } from "@/api/hooks/useAuth";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSaveManualMeasurement } from "@/api/hooks/useManualMeasurement";
+import { useProfile } from "@/api/hooks/useProfile";
 import {
   Field,
   FieldArray,
   Form,
   Formik,
 } from "formik";
-import type React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
-
-import {
-  Plus,
-  Trash2,
-  Upload,
-  ArrowLeft,
-} from "lucide-react";
+import { Plus, Trash2, ArrowLeft, X, Upload } from "lucide-react";
 import { toast } from "@/app/components/hooks/use-toast";
+import { MeasurementTopNav } from "@/app/components/MeasurementTopNav";
+
+interface CustomMeasurement {
+  bodyPartName: string;
+  size: string;
+}
 
 interface BodySection {
   sectionName: string;
-  size: number;
-  neck?: number;
-  customMeasurements: Array<{
-    name: string;
-    value: number;
-  }>;
+  measurements: CustomMeasurement[];
 }
 
-interface MeasurementFormValues {
-  id: string;
-  title: string;
-  description: string;
+interface SelfMeasurementFormValues {
+  firstName: string;
+  lastName: string;
+  measurementType: string;
+  subject: string;
   bodySections: BodySection[];
-  pictures: File[];
-  pictureLinks: string[];
-  sim: string;
-  otherName: string;
 }
+
+// Generate Form ID
+const generateFormId = () => {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 11);
+  return `CUR001-${timestamp.toString().slice(-6)}-${random.slice(0, 3).toUpperCase()}`;
+};
 
 const validationSchema = Yup.object().shape({
-  id: Yup.string().required("ID is required"),
-  title: Yup.string().required("Title is required"),
-  description: Yup.string().required("Description is required"),
-  sim: Yup.string().required("SIM is required"),
-  otherName: Yup.string().required("Other name is required"),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  measurementType: Yup.string().required("Measurement type is required"),
+  subject: Yup.string().required("Subject is required"),
   bodySections: Yup.array()
     .of(
       Yup.object().shape({
         sectionName: Yup.string().required("Section name is required"),
-        size: Yup.number()
-          .required("Size is required")
-          .min(0, "Size must be positive"),
-        neck: Yup.number()
-          .min(0, "Neck must be positive")
-          .nullable(),
-        customMeasurements: Yup.array()
+        measurements: Yup.array()
           .of(
             Yup.object().shape({
-              name: Yup.string().required("Measurement name is required"),
-              value: Yup.number()
-                .required("Value is required")
-                .min(0, "Value must be positive"),
+              bodyPartName: Yup.string().required("Body part name is required"),
+              size: Yup.string().required("Size is required"),
             })
           )
+          .min(1, "At least one measurement is required"),
       })
     )
-    .min(1, "At least one body section is required"),
-  pictureLinks: Yup.array().of(Yup.string().url("Must be a valid URL")),
+    .min(1, "At least one section is required"),
 });
 
-const initialBodySections: BodySection[] = [
-  {
-    sectionName: "Head Section",
-    size: 0,
-    neck: 0,
-    customMeasurements: []
-  },
-  {
-    sectionName: "Chest Section", 
-    size: 0,
-    customMeasurements: []
-  },
-  {
-    sectionName: "Abdomen Section",
-    size: 0,
-    customMeasurements: []
-  },
-  {
-    sectionName: "Waist Section",
-    size: 0,
-    customMeasurements: []
-  },
-  {
-    sectionName: "Thigh Section",
-    size: 0,
-    customMeasurements: []
-  },
-  {
-    sectionName: "Leg Section",
-    size: 0,
-    customMeasurements: []
-  }
-];
-
-const initialValues: MeasurementFormValues = {
-  id: "",
-  title: "",
-  description: "",
-  bodySections: initialBodySections,
-  pictures: [],
-  pictureLinks: [],
-  sim: "Fistian Latinum",
-  otherName: "21cm",
+const initialValues: SelfMeasurementFormValues = {
+  firstName: "",
+  lastName: "",
+  measurementType: "Manual",
+  subject: "Self",
+  bodySections: [
+    {
+      sectionName: "Head Section",
+      measurements: [
+        { bodyPartName: "", size: "" },
+      ],
+    },
+    {
+      sectionName: "Chest Section",
+      measurements: [
+        { bodyPartName: "", size: "" },
+      ],
+    },
+  ],
 };
 
-export default function CreateMeasurementForm() {
+export default function SelfMeasurementForm() {
   const router = useRouter();
-  const { client } = useAuth();
-  const queryClient = useQueryClient();
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const { profile } = useProfile();
+  const [isCreating, setIsCreating] = useState(false);
+  const [step, setStep] = useState(1);
+  const [formId] = useState(generateFormId());
+  const [frontImage, setFrontImage] = useState<File | null>(null);
+  const [sideImage, setSideImage] = useState<File | null>(null);
+  const saveMeasurementMutation = useSaveManualMeasurement();
 
-  const createMeasurementMutation = useMutation({
-    mutationFn: async (values: MeasurementFormValues) => {
-      const formData = new FormData();
+  // Move the useEffect outside of the Formik render prop
+  const AutoFillUserInfo = ({ values, setFieldValue }: { 
+    values: SelfMeasurementFormValues; 
+    setFieldValue: (field: string, value: string | number | boolean | object | null | undefined) => void 
+  }) => {
+    useEffect(() => {
+      if (values.subject === "Self" && profile) {
+        setFieldValue("firstName", profile.firstName || "");
+        setFieldValue("lastName", profile.lastName || "");
+      }
+    }, [values.subject, setFieldValue]);
 
-      // Basic information
-      formData.append("id", values.id);
-      formData.append("title", values.title);
-      formData.append("description", values.description);
-      formData.append("sim", values.sim);
-      formData.append("otherName", values.otherName);
-
-      // Body sections with measurements
-      values.bodySections.forEach((section, sectionIndex) => {
-        formData.append(`bodySections[${sectionIndex}][sectionName]`, section.sectionName);
-        formData.append(`bodySections[${sectionIndex}][size]`, section.size.toString());
-        
-        if (section.neck !== undefined) {
-          formData.append(`bodySections[${sectionIndex}][neck]`, section.neck.toString());
-        }
-
-        section.customMeasurements.forEach((measurement, measurementIndex) => {
-          formData.append(`bodySections[${sectionIndex}][customMeasurements][${measurementIndex}][name]`, measurement.name);
-          formData.append(`bodySections[${sectionIndex}][customMeasurements][${measurementIndex}][value]`, measurement.value.toString());
-        });
-      });
-
-      // Picture links
-      values.pictureLinks.forEach((link, index) => {
-        formData.append(`pictureLinks[${index}]`, link);
-      });
-
-      // Uploaded pictures
-      uploadedFiles.forEach((file) => {
-        formData.append("pictures", file);
-      });
-
-      return client.post("/api/v1/measurements", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success!",
-        description: "Measurement created successfully",
-      });
-      queryClient.invalidateQueries({ queryKey: ["all measurements"] });
-      router.push("/user/body-measurement");
-    },
-    onError: (error: unknown) => {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create measurement",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setUploadedFiles(prev => [...prev, ...files]);
+    return null; // This is a utility component, doesn't render anything
   };
 
-  const removeFile = (index: number) => {
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  const handleSubmit = async (values: SelfMeasurementFormValues) => {
+    setIsCreating(true);
+    try {
+      const payload = {
+        measurementType: values.measurementType,
+        subject: values.subject,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        sections: values.bodySections.map(section => ({
+          sectionName: section.sectionName,
+          measurements: section.measurements.map(m => ({
+            bodyPartName: m.bodyPartName,
+            size: parseFloat(m.size) || m.size,
+          })),
+        })),
+      };
+
+      await saveMeasurementMutation.mutateAsync(payload);
+      
+      toast({
+        title: "Success!",
+        description: "Measurement saved successfully",
+      });
+      
+      router.push("/user/body-measurement");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to save measurement",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-4"
+    <div className="min-h-screen bg-white">
+      <style jsx>{`
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+        .manrope {
+          font-family: 'Manrope', sans-serif;
+        }
+      `}</style>
+      
+      <MeasurementTopNav />
+
+      {/* Modal Overlay */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-[20px] shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+            enableReinitialize
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back
-          </button>
-          
-          <h1 className="text-3xl font-bold text-gray-900">
-            Create Measurement
-          </h1>
-        </div>
+            {({ values, errors, touched, setFieldValue }) => (
+              <Form className="flex flex-col h-full max-h-[90vh]">
+                {/* Auto-fill user info */}
+                <AutoFillUserInfo values={values} setFieldValue={setFieldValue} />
 
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            createMeasurementMutation.mutate({
-              ...values,
-              pictures: uploadedFiles,
-            });
-          }}
-        >
-          {({ values, errors, touched }) => (
-            <Form className="space-y-6">
-              {/* Basic Information */}
-              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Measurement Details
-                </h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      ID
-                    </label>
-                    <Field
-                      name="id"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter measurement ID"
-                    />
-                    {errors.id && touched.id && (
-                      <p className="mt-1 text-sm text-red-600">{errors.id}</p>
-                    )}
+                {/* Modal Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => step === 2 ? setStep(1) : router.back()}
+                      className="text-gray-600 hover:text-gray-800"
+                    >
+                      <ArrowLeft className="w-5 h-5" />
+                    </button>
+                    <div>
+                      <h2 className="manrope text-[22px] font-semibold text-gray-900">
+                        Take New Measurement
+                      </h2>
+                    </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Title
-                    </label>
-                    <Field
-                      name="title"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Enter measurement title"
-                    />
-                    {errors.title && touched.title && (
-                      <p className="mt-1 text-sm text-red-600">{errors.title}</p>
-                    )}
-                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
 
-                <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Description
-                  </label>
-                  <Field
-                    as="textarea"
-                    name="description"
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter measurement description"
-                  />
-                  {errors.description && touched.description && (
-                    <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Set Body Measurements */}
-              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Set Body Measurements
-                </h3>
-
-                <div className="space-y-6">
-                  {values.bodySections.map((section, sectionIndex) => (
-                    <div key={sectionIndex} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                        {sectionIndex + 1}. {section.sectionName}
-                      </h4>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        {/* Size Input */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Size
-                          </label>
-                          <Field
-                            type="number"
-                            name={`bodySections.${sectionIndex}.size`}
-                            min="0"
-                            step="0.1"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="0.0"
-                          />
+                {/* Scrollable Content */}
+                <div className="overflow-y-auto flex-1">
+                  {/* Step 1: Initial Setup */}
+                  {step === 1 && (
+                    <div className="p-6 space-y-6">
+                      {/* Form ID Display */}
+                      <div className="flex justify-end">
+                        <div className="manrope text-sm text-gray-500">
+                          Form ID: <span className="font-medium text-gray-700">{formId}</span>
                         </div>
-
-                        {/* Neck Input - Only for Head Section */}
-                        {section.sectionName === "Head Section" && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Neck
-                            </label>
-                            <Field
-                              type="number"
-                              name={`bodySections.${sectionIndex}.neck`}
-                              min="0"
-                              step="0.1"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              placeholder="0.0"
-                            />
-                          </div>
-                        )}
                       </div>
 
-                      {/* Custom Measurements */}
-                      <FieldArray name={`bodySections.${sectionIndex}.customMeasurements`}>
-                        {({ remove, push }) => (
-                          <div className="space-y-3">
-                            {section.customMeasurements.map((measurement, measurementIndex) => (
-                              <div key={measurementIndex} className="bg-white p-3 rounded-lg border border-gray-200">
-                                <div className="flex items-center gap-3">
-                                  <div className="flex-1">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                      Measurement Name
-                                    </label>
-                                    <Field
-                                      name={`bodySections.${sectionIndex}.customMeasurements.${measurementIndex}.name`}
-                                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                      placeholder="Enter measurement name"
-                                    />
-                                  </div>
-                                  <div className="flex-1">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                      Value
-                                    </label>
-                                    <Field
-                                      type="number"
-                                      name={`bodySections.${sectionIndex}.customMeasurements.${measurementIndex}.value`}
-                                      min="0"
-                                      step="0.1"
-                                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                      placeholder="0.0"
-                                    />
-                                  </div>
-                                  <button
-                                    type="button"
-                                    onClick={() => remove(measurementIndex)}
-                                    className="mt-6 text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </button>
+                      {/* Measurement Type and Subject */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                            Manual or AI Measurement
+                          </label>
+                          <Field
+                            as="select"
+                            name="measurementType"
+                            className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          >
+                            <option value="Manual">Manual</option>
+                            <option value="AI">AI</option>
+                          </Field>
+                        </div>
+                        <div>
+                          <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                            Whose Measurement
+                          </label>
+                          <Field
+                            as="select"
+                            name="subject"
+                            className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                          >
+                            <option value="Self">Self</option>
+                            <option value="Other">Other</option>
+                          </Field>
+                        </div>
+                      </div>
+
+                      {/* First Name and Last Name */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                            First Name
+                          </label>
+                          <Field
+                            name="firstName"
+                            type="text"
+                            placeholder="First Name"
+                            disabled={values.subject === "Self"}
+                            className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm disabled:bg-gray-100"
+                          />
+                          {errors.firstName && touched.firstName && (
+                            <div className="manrope text-red-500 text-xs mt-1">
+                              {errors.firstName}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                            Last Name
+                          </label>
+                          <Field
+                            name="lastName"
+                            type="text"
+                            placeholder="Last Name"
+                            disabled={values.subject === "Self"}
+                            className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm disabled:bg-gray-100"
+                          />
+                          {errors.lastName && touched.lastName && (
+                            <div className="manrope text-red-500 text-xs mt-1">
+                              {errors.lastName}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Image Uploads */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                            Upload Front Image
+                          </label>
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => setFrontImage(e.target.files?.[0] || null)}
+                              className="hidden"
+                              id="front-image"
+                            />
+                            <label htmlFor="front-image" className="cursor-pointer">
+                              <Upload className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+                              <p className="manrope text-sm text-gray-500">
+                                {frontImage ? frontImage.name : "Upload front view or paste your file here"}
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                            Upload Side Image
+                          </label>
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-500 transition-colors cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => setSideImage(e.target.files?.[0] || null)}
+                              className="hidden"
+                              id="side-image"
+                            />
+                            <label htmlFor="side-image" className="cursor-pointer">
+                              <Upload className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+                              <p className="manrope text-sm text-gray-500">
+                                {sideImage ? sideImage.name : "Upload side view or paste your file here"}
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Next Button */}
+                      <div className="flex justify-end gap-3 pt-4">
+                        <button
+                          type="button"
+                          onClick={() => router.back()}
+                          className="manrope px-6 py-2 text-gray-700 border border-[#5D2A8B] rounded-full hover:bg-gray-50 transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!values.firstName || !values.lastName) {
+                              toast({
+                                title: "Required Fields",
+                                description: "Please fill in first name and last name",
+                                variant: "destructive",
+                              });
+                              return;
+                            }
+                            setStep(2);
+                          }}
+                          className="manrope px-6 py-2 bg-[#5D2A8B] text-white rounded-full hover:bg-purple-700 transition-colors"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Step 2: Measurements */}
+                  {step === 2 && (
+                    <div className="p-6 space-y-8">
+                      <FieldArray name="bodySections">
+                        {({ push: pushSection, remove: removeSection }) => (
+                          <>
+                            {values.bodySections.map((section, sectionIndex) => (
+                              <div key={sectionIndex} className="space-y-4 p-4 border border-gray-200 rounded-lg">
+                                {/* Section Header */}
+                                <div className="flex items-center justify-between">
+                                  <h3 className="manrope text-sm font-semibold text-gray-700 tracking-wide">
+                                    {section.sectionName}
+                                  </h3>
+                                  {sectionIndex > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => removeSection(sectionIndex)}
+                                      className="text-red-500 hover:text-red-700 text-sm"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </button>
+                                  )}
                                 </div>
+
+                                {/* Measurements Grid */}
+                                <FieldArray name={`bodySections.${sectionIndex}.measurements`}>
+                                  {({ push: pushMeasurement, remove: removeMeasurement }) => (
+                                    <div className="space-y-4">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {section.measurements.map((measurement, measurementIndex) => (
+                                          <React.Fragment key={measurementIndex}>
+                                            {/* Body Part Name */}
+                                            <div>
+                                              <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                                                Body Part Name
+                                              </label>
+                                              <div className="relative">
+                                                <Field
+                                                  name={`bodySections.${sectionIndex}.measurements.${measurementIndex}.bodyPartName`}
+                                                  type="text"
+                                                  placeholder="e.g., Shoulder Width"
+                                                  className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                                                />
+                                                {measurementIndex > 0 && (
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => removeMeasurement(measurementIndex)}
+                                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 hover:text-red-700"
+                                                  >
+                                                    <Trash2 className="w-4 h-4" />
+                                                  </button>
+                                                )}
+                                              </div>
+                                            </div>
+
+                                            {/* Size */}
+                                            <div>
+                                              <label className="manrope block text-sm font-medium text-gray-700 mb-2">
+                                                Size (cm)
+                                              </label>
+                                              <Field
+                                                name={`bodySections.${sectionIndex}.measurements.${measurementIndex}.size`}
+                                                type="text"
+                                                placeholder="e.g., 45"
+                                                className="manrope w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                                              />
+                                            </div>
+                                          </React.Fragment>
+                                        ))}
+                                      </div>
+
+                                      {/* Add New Field Button */}
+                                      <button
+                                        type="button"
+                                        onClick={() => pushMeasurement({ bodyPartName: "", size: "" })}
+                                        className="manrope text-[#5D2A8B] text-sm font-medium flex items-center gap-1 hover:text-purple-700"
+                                      >
+                                        <Plus className="w-4 h-4" />
+                                        Add New Field
+                                      </button>
+                                    </div>
+                                  )}
+                                </FieldArray>
                               </div>
                             ))}
 
+                            {/* Add New Section Button */}
                             <button
                               type="button"
-                              onClick={() => push({ name: "", value: 0 })}
-                              className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm"
+                              onClick={() =>
+                                pushSection({
+                                  sectionName: `Section ${values.bodySections.length + 1}`,
+                                  measurements: [{ bodyPartName: "", size: "" }],
+                                })
+                              }
+                              className="manrope text-[#5D2A8B] text-sm font-medium flex items-center gap-1 hover:text-purple-700 border border-[#5D2A8B] rounded-lg px-4 py-2"
                             >
                               <Plus className="w-4 h-4" />
-                              Add more
+                              Add New Section
                             </button>
-                          </div>
+                          </>
                         )}
                       </FieldArray>
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
 
-              {/* Log Section */}
-              <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                
-
-                <div className="space-y-4">
-                 
-
-                  {/* Picture Upload */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Attach picture upload
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleFileUpload}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                      />
-                      <Upload className="absolute right-3 top-2.5 w-5 h-5 text-gray-400 pointer-events-none" />
-                    </div>
-
-                    {/* Uploaded Files List */}
-                    {uploadedFiles.length > 0 && (
-                      <div className="mt-3 space-y-2">
-                        <h4 className="text-sm font-medium text-gray-700">Uploaded Files:</h4>
-                        {uploadedFiles.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between bg-white p-2 rounded border">
-                            <span className="text-sm text-gray-600 truncate">{file.name}</span>
-                            <button
-                              type="button"
-                              onClick={() => removeFile(index)}
-                              className="text-red-500 hover:text-red-700"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Picture Links */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Add pictures link to picture
-                    </label>
-                    <FieldArray name="pictureLinks">
-                      {({ push, remove }) => (
-                        <div className="space-y-3">
-                          {values.pictureLinks.map((link, index) => (
-                            <div key={index} className="flex gap-2">
-                              <Field
-                                name={`pictureLinks.${index}`}
-                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="https://example.com/image.jpg"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => remove(index)}
-                                className="px-3 py-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={() => push("")}
-                            className="flex items-center gap-2 px-3 py-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg text-sm"
-                          >
-                            <Plus className="w-4 h-4" />
-                            Add Link
-                          </button>
+                {/* Footer Buttons - Fixed at bottom */}
+                {step === 2 && (
+                  <div className="flex justify-end gap-3 p-6 border-t border-gray-200 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="manrope px-6 py-2 text-gray-700 border border-[#5D2A8B] rounded-full hover:bg-gray-50 transition-colors"
+                      disabled={isCreating}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isCreating}
+                      className={`manrope px-6 py-2 bg-[#5D2A8B] text-white rounded-full hover:bg-purple-700 transition-colors ${
+                        isCreating ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      {isCreating ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Saving...
                         </div>
+                      ) : (
+                        "Save"
                       )}
-                    </FieldArray>
+                    </button>
                   </div>
-                </div>
-
-               
-              </div>
-
-             
-
-              {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-6 border-t border-gray-200 bg-white p-6 rounded-lg shadow-sm">
-                <button
-                  type="button"
-                  onClick={() => router.back()}
-                  className="flex items-center gap-2 px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Back
-                </button>
-                
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={createMeasurementMutation.isPending}
-                    className={`flex items-center gap-2 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium ${
-                      createMeasurementMutation.isPending ? "opacity-70 cursor-not-allowed" : ""
-                    }`}
-                  >
-                    {createMeasurementMutation.isPending ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        Creating...
-                      </>
-                    ) : (
-                      <>Submit</>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-             
-            </Form>
-          )}
-        </Formik>
+                )}
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
     </div>
   );
