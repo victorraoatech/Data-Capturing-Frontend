@@ -5,10 +5,14 @@ import { Search, Bell, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { useProfile } from '@/api/hooks/useProfile';
 import { useRouter } from 'next/navigation';
+import { LogoutModal } from './logoutModal';
+import { NotificationPanel } from './notificationModal';
 
 export const UserTopBar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { profile, loading, error } = useProfile();
+  const [showLogoutModal, setShowLogoutModal] = useState(false); // Add modal state
+  const [showNotifications, setShowNotifications] = useState(false); // Add notification state
+  const { profile, error } = useProfile();
   const router = useRouter();
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
@@ -22,19 +26,19 @@ export const UserTopBar = () => {
     }
   }, [error, profile]);
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true); // Open modal instead of logging out immediately
+    setShowDropdown(false);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
     localStorage.removeItem('token');
     router.push('/auth/login');
   };
 
-  const getInitials = () => {
-    if (profile?.firstName && profile?.lastName) {
-      return `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
-    }
-    if (profile?.email) {
-      return profile.email[0].toUpperCase();
-    }
-    return 'U';
+  const handleCancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   // Close dropdown when clicking outside
@@ -61,13 +65,26 @@ export const UserTopBar = () => {
         .manrope { font-family: 'Manrope', sans-serif; }
       `}</style>
 
-      {/* Positioned inside the white navigation bar at top right - Absolute position */}
+      {/* Logout Modal */}
+      <LogoutModal 
+        isOpen={showLogoutModal}
+        onConfirm={handleConfirmLogout}
+        onCancel={handleCancelLogout}
+      />
+
+      {/* Notification Panel */}
+      <NotificationPanel 
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
+      />
+
+      {/* Positioned inside the white navigation bar at top right - Lower z-index */}
       <div 
         className="absolute flex items-center gap-3"
         style={{
           top: '124px',
           left: '850px',
-          zIndex: 100,
+          zIndex: 40,
           pointerEvents: 'auto'
         }}
       >
@@ -102,13 +119,13 @@ export const UserTopBar = () => {
             borderRadius: '40px',
             border: '1px solid #E4D8F3'
           }}
-          onClick={() => console.log('Notification clicked')}
+          onClick={() => setShowNotifications(!showNotifications)}
         >
           <Bell className="w-5 h-5 text-gray-600" />
         </button>
 
         {/* Avatar and Dropdown */}
-        <div className="relative" ref={dropdownRef} style={{ zIndex: 101 }}>
+        <div className="relative" ref={dropdownRef} style={{ zIndex: 41 }}>
           <button 
             className="flex items-center cursor-pointer bg-transparent border-none p-0"
             style={{
@@ -168,7 +185,7 @@ export const UserTopBar = () => {
                 width: '200px',
                 background: '#F4EFFA',
                 borderRadius: '15px',
-                zIndex: 99999,
+                zIndex: 9999,
                 boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
                 padding: '20px'
               }}
@@ -213,7 +230,7 @@ export const UserTopBar = () => {
                     cursor: 'pointer',
                     padding: 0
                   }}
-                  onClick={handleLogout}
+                  onClick={handleLogoutClick} // Updated to open modal
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = '#5D2A8B';
                   }}
@@ -221,7 +238,7 @@ export const UserTopBar = () => {
                     e.currentTarget.style.color = '#1A1A1A';
                   }}
                 >
-                  Sign Out
+                  Logout
                 </button>
               </div>
             </div>

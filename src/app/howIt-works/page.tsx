@@ -4,7 +4,7 @@ import Footer from '../Home/footer/page';
 import HeroSection from './hero-section/page';
 import SimpleSteps from "./simple-steps/page"
 import { AIFeaturesSection } from './ai-feature/page';
-import ReadyToCapture from '../Home/capture/page';
+// import ReadyToCapture from '../Home/capture/page';
 const Page = () => {
   return (
     <div>

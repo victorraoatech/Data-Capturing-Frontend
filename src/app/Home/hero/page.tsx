@@ -263,7 +263,10 @@ const HeroSection: React.FC = () => {
           >
             {uploadedImage ? (
               <div className="w-full h-full rounded-2xl overflow-hidden relative">
-                <img src={uploadedImage} alt="preview" className="w-full h-full object-cover" />
+                <div className="w-full h-full relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={uploadedImage} alt="preview" className="w-full h-full object-cover" />
+                </div>
                 <button
                   onClick={resetImage}
                   className="absolute top-3 right-3 bg-white/90 hover:bg-white text-sm text-gray-700 px-4 py-2 rounded-full shadow-md transition-all"
@@ -366,7 +369,7 @@ const HeroSection: React.FC = () => {
                           lineHeight: "100%",
                         }}
                       >
-                        Take Image
+                        Capture Image
                       </span>
                      <svg
   className="w-4 h-4 inline-block"
@@ -383,7 +386,7 @@ const HeroSection: React.FC = () => {
                     </div>
                   </label>
 
-                  {/* "or paste your file here" text */}
+{/*                  
                   <p 
                     className="text-center"
                     style={{
@@ -400,7 +403,7 @@ const HeroSection: React.FC = () => {
                     }}
                   >
                     or paste your file <span style={{ textDecoration: "underline" }}>here</span>
-                  </p>
+                  </p> */}
                 </div>
               </>
             )}
@@ -516,7 +519,7 @@ const HeroSection: React.FC = () => {
               zIndex: 2,
             }}
           >
-            Upload a single image to get precise body or object measurements with our AI-powered engine.
+            Capture a single image to get precise body or object measurements with our AI-powered engine.
           </p>
         </div>
 
@@ -547,7 +550,10 @@ const HeroSection: React.FC = () => {
           >
             {uploadedImage ? (
               <div className="w-full h-full rounded-2xl overflow-hidden relative">
-                <img src={uploadedImage} alt="preview" className="w-full h-full object-cover" />
+                <div className="w-full h-full relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={uploadedImage} alt="preview" className="w-full h-full object-cover" />
+                </div>
                 <button
                   onClick={resetImage}
                   className="absolute top-2 right-2 bg-white/90 hover:bg-white text-xs text-gray-700 px-3 py-1 rounded-full shadow-md transition-all"
@@ -623,7 +629,7 @@ const HeroSection: React.FC = () => {
                         gap: "6px",
                       }}
                     >
-                      <span>Take Image</span>
+                      <span>Capture Image</span>
                       <span style={{ fontSize: "14px" }}>›</span>
                     </div>
                   </label>

@@ -4,14 +4,15 @@ import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useState } from "react";
 
 export interface User {
-  _id: string;
-  firstName: string;
-  lastName: string;
+  id: string;
   email: string;
-  phone: string | null;
-  organizationId: string;
-  // role: string;
-  // [key: string]: any;
+  fullName: string;
+  phoneNumber: string | null;
+  role: string;
+  isAdmin: boolean;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AuthContextType {
@@ -40,7 +41,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem("user", JSON.stringify(userData));
     } catch (err) {
       // localStorage could be disabled in some environments — fail silently.
-      console.error("Failed to persist auth to localStorage", err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Failed to persist auth to localStorage", err);
+      }
     }
   };
 
@@ -52,7 +55,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     } catch (err) {
-      console.error("Failed to remove auth from localStorage", err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Failed to remove auth from localStorage", err);
+      }
     }
 
     router.push(`/auth/login`);
@@ -75,13 +80,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // optional: validate shape before setUser(parsed)
           setUser(parsed);
         } catch (parseErr) {
-          console.warn("Could not parse stored user, clearing invalid value.", parseErr);
+          if (process.env.NODE_ENV === 'development') {
+            console.warn("Could not parse stored user, clearing invalid value.", parseErr);
+          }
           // clear corrupt value so we don't try to parse it again
           localStorage.removeItem("user");
         }
       }
     } catch (err) {
-      console.error("Error reading auth from localStorage", err);
+      if (process.env.NODE_ENV === 'development') {
+        console.error("Error reading auth from localStorage", err);
+      }
     }
   }, []);
 

@@ -1,14 +1,20 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
 interface UserProfile {
+  id: string;
   userId?: string;
-  id?: string;
   email: string;
+  fullName: string;
   firstName?: string;
   lastName?: string;
-  role?: string;
-  avatar?: string;
-  createdAt?: string;
+  phoneNumber: string | null;
+  role: string;
+  isAdmin: boolean;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface UseProfileReturn {
@@ -34,7 +40,7 @@ export const useProfile = (): UseProfileReturn => {
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch('https://datacapture-backend.onrender.com/api/auth/me', {
+      const response = await fetch('/api/user/profile', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -44,19 +50,52 @@ export const useProfile = (): UseProfileReturn => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error('Profile API error:', errorData);
+        // Don't log to console in production, but we can keep it for development
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Profile API error:', errorData);
+        }
         throw new Error(errorData.message || `Failed to fetch profile: ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log('Profile data received:', data);
       
       // Handle different response structures
-      const profileData = data.user || data.data || data;
+      let profileData = data.user || data.data?.user || data.data || data;
+      
+      // Ensure firstName and lastName are available
+      if (profileData.fullName && profileData.fullName.trim() && !profileData.firstName && !profileData.lastName) {
+        const [firstName, ...lastNameParts] = profileData.fullName.split(' ');
+        const lastName = lastNameParts.join(' ');
+        profileData = {
+          ...profileData,
+          firstName: firstName || '',
+          lastName: lastName || ''
+        };
+      } else if (!profileData.firstName && !profileData.lastName) {
+        // If fullName is empty, try to extract from email
+        const emailName = profileData.email?.split('@')[0] || '';
+        profileData = {
+          ...profileData,
+          firstName: emailName,
+          lastName: ''
+        };
+      }
+      
+      // Ensure userId is available
+      if (profileData.id && !profileData.userId) {
+        profileData = {
+          ...profileData,
+          userId: profileData.id
+        };
+      }
+      
       setProfile(profileData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
-      console.error('Profile fetch error:', err);
+      // Don't log to console in production, but we can keep it for development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Profile fetch error:', err);
+      }
     } finally {
       setLoading(false);
     }

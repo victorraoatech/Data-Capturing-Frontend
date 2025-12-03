@@ -44,7 +44,7 @@ const Page = () => {
   };
 
   // Close dropdown when clicking outside
-  const handleOutsideClick = (e: React.MouseEvent) => {
+  const handleOutsideClick = () => {
     if (dropdownOpen !== null) {
       closeDropdown();
     }

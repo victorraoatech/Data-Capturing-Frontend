@@ -6,13 +6,24 @@ export async function POST(request: NextRequest) {
     
     console.log('🔄 Proxying organization registration request to backend:', body);
 
+    // Transform the data format to match backend expectations
+    const transformedBody = {
+      ...body,
+      phoneNumber: body.phone, // Transform 'phone' to 'phoneNumber'
+    };
+    
+    // Remove the original phone field if it exists
+    if (transformedBody.phone) {
+      delete transformedBody.phone;
+    }
+
     // Forward the request to the actual backend
     const response = await fetch('https://datacapture-backend.onrender.com/api/organisations/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(transformedBody),
     });
 
     const data = await response.json();

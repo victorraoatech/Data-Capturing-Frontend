@@ -1,5 +1,3 @@
-
-
 "use client"
 import { useState, useRef } from 'react';
 import { Upload, RefreshCw, Trash2, Image } from 'lucide-react';
@@ -93,7 +91,12 @@ const Page = () => {
   };
 
   const handleDownload = () => {
-    const data = `Body Measurements\n\nChest: ${measurements.chest} cm\nWaist: ${measurements.waist} cm\nHips: ${measurements.hips} cm\nLegs: ${measurements.legs} cm`;
+    const data = `Body Measurements
+
+Chest: ${measurements.chest} cm
+Waist: ${measurements.waist} cm
+Hips: ${measurements.hips} cm
+Legs: ${measurements.legs} cm`;
     const blob = new Blob([data], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -120,15 +123,24 @@ const Page = () => {
               <div className="mb-4 flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">Tools</span>
                 <div className="flex gap-2">
-                  <button className="p-2 hover:bg-gray-100 rounded" title="Upload">
+                  <button 
+                    className="p-2 hover:bg-gray-100 rounded" 
+                    title="Upload"
+                    aria-label="Upload image"
+                  >
                     <Upload className="w-4 h-4 text-gray-600" />
                   </button>
-                  <button className="p-2 hover:bg-gray-100 rounded" title="Refresh">
+                  <button 
+                    className="p-2 hover:bg-gray-100 rounded" 
+                    title="Refresh"
+                    aria-label="Refresh"
+                  >
                     <RefreshCw className="w-4 h-4 text-gray-600" />
                   </button>
                   <button 
                     className="p-2 hover:bg-gray-100 rounded" 
                     title="Delete"
+                    aria-label="Delete image"
                     onClick={() => clearImage('front')}
                   >
                     <Trash2 className="w-4 h-4 text-gray-600" />
@@ -139,11 +151,14 @@ const Page = () => {
               <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ height: '400px' }}>
                 {frontImage ? (
                   <>
-                    <img 
-                      src={frontImage} 
-                      alt="Front view" 
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="w-full h-full relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img 
+                        src={frontImage} 
+                        alt="Front view of body for measurement analysis" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     {analyzingFront && (
                       <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
                         <div className="text-center">
@@ -155,8 +170,13 @@ const Page = () => {
                   </>
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <label className="cursor-pointer text-center">
-                      <Image className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <label 
+                      className="cursor-pointer text-center"
+                      aria-label="Upload front view image"
+                    >
+                      <div className="w-12 h-12 text-gray-400 mx-auto mb-2 flex items-center justify-center">
+                        <Image className="w-full h-full" aria-hidden="true" />
+                      </div>
                       <span className="text-sm text-gray-500">Click to upload front image</span>
                       <input
                         ref={frontInputRef}
@@ -164,6 +184,7 @@ const Page = () => {
                         accept="image/*"
                         className="hidden"
                         onChange={(e) => handleImageUpload(e, 'front')}
+                        aria-label="Front image upload"
                       />
                     </label>
                   </div>
@@ -183,7 +204,11 @@ const Page = () => {
               <div className="mb-4 flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">Tools</span>
                 <div className="flex gap-2">
-                  <button className="p-2 hover:bg-gray-100 rounded" title="Upload">
+                  <button 
+                    className="p-2 hover:bg-gray-100 rounded" 
+                    title="Upload"
+                    aria-label="Upload image"
+                  >
                     <Upload className="w-4 h-4 text-gray-600" />
                   </button>
                 </div>
@@ -192,11 +217,14 @@ const Page = () => {
               <div className="relative bg-gray-100 rounded-lg overflow-hidden" style={{ height: '400px' }}>
                 {sideImage ? (
                   <>
-                    <img 
-                      src={sideImage} 
-                      alt="Side view" 
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="w-full h-full relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img 
+                        src={sideImage} 
+                        alt="Side view of body for measurement analysis" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     {analyzingSide && (
                       <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
                         <div className="text-center">
@@ -208,9 +236,12 @@ const Page = () => {
                   </>
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <label className="cursor-pointer text-center p-4">
+                    <label 
+                      className="cursor-pointer text-center p-4"
+                      aria-label="Upload side view image"
+                    >
                       <div className="w-16 h-16 mx-auto mb-3 flex items-center justify-center">
-                        <Upload className="w-10 h-10 text-purple-500" />
+                        <Upload className="w-10 h-10 text-purple-500" aria-hidden="true" />
                       </div>
                       <p className="text-sm text-purple-600 font-medium mb-1">Upload side view or paste your file here</p>
                       <input
@@ -219,6 +250,7 @@ const Page = () => {
                         accept="image/*"
                         className="hidden"
                         onChange={(e) => handleImageUpload(e, 'side')}
+                        aria-label="Side image upload"
                       />
                     </label>
                   </div>
@@ -251,6 +283,7 @@ const Page = () => {
                         textDecorationStyle: 'solid',
                         color: '#5D2A8B'
                       }}
+                      aria-label={showAllMeasurements ? 'Show less measurements' : 'Show more measurements'}
                     >
                       {showAllMeasurements ? 'See less' : 'See more'}
                     </button>
@@ -270,6 +303,7 @@ const Page = () => {
                   onClick={handleDownload}
                   className="mt-auto w-full hover:opacity-90 text-white font-medium py-3 px-6 rounded-lg transition-opacity"
                   style={{ backgroundColor: '#5D2A8B' }}
+                  aria-label="Download measurements as text file"
                 >
                   Download
                 </button>

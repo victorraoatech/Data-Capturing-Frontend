@@ -1,5 +1,3 @@
-
-
 "use client"
 
 import type React from "react"
@@ -57,10 +55,12 @@ export default function LoginPage() {
       const { data } = await client.post("/api/auth/login", payload)
       return data
     },
-    onSuccess: (data) => {
+    onSuccess: (response) => {
       setApiError(null); // Clear any previous errors
-      if (data.token && data.user) {
-        signIn(data.token, data.user);
+      // Updated to handle the actual response structure from backend
+      const data = response.data; // Extract the actual data from the response
+      if (data && data.jwtToken && data.user) {
+        signIn(data.jwtToken, data.user);
         
         // Check user role and redirect accordingly
         const userRole = data.user.role?.toLowerCase();
@@ -143,6 +143,13 @@ export default function LoginPage() {
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
         .monument-extended { font-family: 'Monument Extended', sans-serif; }
         .manrope { font-family: 'Manrope', sans-serif; }
+        
+        /* Hide left image on mobile devices */
+        @media (max-width: 768px) {
+          .hide-on-mobile {
+            display: none;
+          }
+        }
         
         .input-container {
           position: relative;
@@ -230,7 +237,7 @@ export default function LoginPage() {
       <div className="relative" style={{ width: "1440px", minHeight: "1000px", margin: "0 auto" }}>
         {/* Left Image Section */}
         <div 
-          className="absolute"
+          className="absolute hide-on-mobile"
           style={{
             width: "700px",
             height: "935px",

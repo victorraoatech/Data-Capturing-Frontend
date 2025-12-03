@@ -195,8 +195,13 @@ const HomePage = () => {
           <HowItWorks/>
           <Features/>
           <CallToActionSection/>
-          <Audience/>
-          <AnimatedAISection/>
+                <div style={{marginBottom: "200px",marginTop: "200px"}}>
+                  <Audience/>
+                  </div>
+                <div style={{marginBottom: "200px",marginTop: "200px"}}>
+                   <AnimatedAISection/>
+                  </div>
+         
         </div>
       </main>
 
